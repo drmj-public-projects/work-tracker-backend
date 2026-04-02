@@ -1,0 +1,22 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot logs
+*.log
+logs/
+
+# Environment
+.env
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+
+# Temporary files
+*.tmp
+*.swp
