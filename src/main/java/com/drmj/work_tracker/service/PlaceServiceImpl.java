@@ -7,6 +7,7 @@ import com.drmj.work_tracker.utils.ApiResponseConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,5 +23,10 @@ public class PlaceServiceImpl implements PlaceService {
             throw new NotFoundException(ApiResponseConstants.NOT_FOUND_MESSAGE);
         }
         return optionalPlace.get();
+    }
+
+    @Override
+    public List<Place> getAllByOrganizationId(UUID organizationId) {
+        return placeRepository.findByOrganization_id(organizationId);
     }
 }
