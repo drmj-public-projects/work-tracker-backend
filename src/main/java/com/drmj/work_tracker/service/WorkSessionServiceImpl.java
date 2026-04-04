@@ -9,6 +9,7 @@ import com.drmj.work_tracker.entity.enums.WorkSessionEntryType;
 import com.drmj.work_tracker.entity.enums.WorkSessionStatus;
 import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.repository.WorkSessionRepository;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class WorkSessionServiceImpl implements WorkSessionService {
                 );
 
         if (hasActiveSession) {
-            throw new BusinessException("User already has an active session");
+            throw new BusinessException(ErrorMessage.USER_HAS_ACTIVE_SESSION.getMessage());
         }
         User userProxy = entityManager.getReference(User.class, request.getUserId());
         Organization orgProxy = entityManager.getReference(Organization.class, request.getOrganizationId());

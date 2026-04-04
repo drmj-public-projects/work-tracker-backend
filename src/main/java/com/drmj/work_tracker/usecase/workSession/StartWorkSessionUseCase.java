@@ -9,6 +9,7 @@ import com.drmj.work_tracker.entity.WorkSession;
 import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.service.*;
 import com.drmj.work_tracker.utils.ApiResponseConstants;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,19 +38,19 @@ public class StartWorkSessionUseCase {
                 request.getOrganizationId()
         );
         if (!userBelongsToOrganization) {
-            throw new BusinessException("User does not belong to organization");
+            throw new BusinessException(ErrorMessage.USER_NOT_IN_ORG.getMessage());
         }
 
         OrganizationSettings settings = organizationSettingsService.getByOrganizationId(request.getOrganizationId());
         if (settings.getRequireLocation()) {
             if (request.getLatitude() == null || request.getLongitude() == null) {
-                throw new BusinessException("Location is required");
+                throw new BusinessException(ErrorMessage.LOCATION_REQUIRED.getMessage());
             }
         }
 
         Place place = placeService.getById(request.getPlaceId());
         if (!place.getOrganization().getId().equals(request.getOrganizationId())) {
-            throw new BusinessException("Place does not belong to organization");
+            throw new BusinessException(ErrorMessage.PLACE_NOT_IN_ORG.getMessage());
         }
     }
 }

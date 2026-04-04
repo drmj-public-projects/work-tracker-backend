@@ -4,6 +4,7 @@ import com.drmj.work_tracker.entity.OrganizationSettings;
 import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.OrganizationSettingsRepository;
 import com.drmj.work_tracker.utils.ApiResponseConstants;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class OrganizationSettingsServiceImpl implements OrganizationSettingsServ
     public OrganizationSettings getByOrganizationId(UUID id) {
         Optional<OrganizationSettings> optionalOrganizationSettings = organizationSettingsRepository.getByOrganizationId(id);
         if (optionalOrganizationSettings.isEmpty()) {
-            throw new NotFoundException(ApiResponseConstants.NOT_FOUND_MESSAGE);
+            throw new NotFoundException(ErrorMessage.ORGANIZATION_SETTINGS_NOT_FOUND_MESSAGE.getMessage());
         }
         return optionalOrganizationSettings.get();
     }

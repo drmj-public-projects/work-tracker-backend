@@ -7,6 +7,7 @@ import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.service.OrganizationService;
 import com.drmj.work_tracker.service.PlaceService;
 import com.drmj.work_tracker.utils.ApiResponseConstants;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class GetPlacesByOrganizationIdUseCase {
     private void validateOrganization(UUID organizationId) {
         boolean organizationExists = organizationService.validateIfExists(organizationId);
         if(Boolean.FALSE.equals(organizationExists)) {
-            throw new NotFoundException(ApiResponseConstants.NOT_FOUND_MESSAGE);
+            throw new NotFoundException(ErrorMessage.ORGANIZATION_NOT_FOUND_MESSAGE.getMessage());
         }
     }
 }

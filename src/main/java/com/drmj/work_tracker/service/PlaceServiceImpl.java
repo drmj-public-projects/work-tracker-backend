@@ -4,6 +4,7 @@ import com.drmj.work_tracker.entity.Place;
 import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.PlaceRepository;
 import com.drmj.work_tracker.utils.ApiResponseConstants;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class PlaceServiceImpl implements PlaceService {
     public Place getById(UUID id) {
         Optional<Place> optionalPlace = placeRepository.findById(id);
         if (optionalPlace.isEmpty()) {
-            throw new NotFoundException(ApiResponseConstants.NOT_FOUND_MESSAGE);
+            throw new NotFoundException(ErrorMessage.PLACE_NOT_FOUND_MESSAGE.getMessage());
         }
         return optionalPlace.get();
     }

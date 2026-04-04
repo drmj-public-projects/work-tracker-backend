@@ -2,6 +2,7 @@ package com.drmj.work_tracker.exception;
 
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.utils.ApiResponseConstants;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleNotFoundException(NotFoundException ex) {
         ApiResponse<String> response = new ApiResponse<>(
                 ApiResponseConstants.NOT_FOUND_CODE,
-                ApiResponseConstants.NOT_FOUND_MESSAGE,
+                ErrorMessage.RESOURCE_NOT_FOUND.getMessage(),
                 null
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(new ApiResponse<>(
                         ApiResponseConstants.ERROR_CODE,
-                        ApiResponseConstants.ERROR_MESSAGE,
+                        ErrorMessage.INTERNAL_SERVER_ERROR_MESSAGE.getMessage(),
                         null
                 ));
     }
