@@ -31,12 +31,12 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = OffsetDateTime.now();
+        this.createdAt = OffsetDateTime.now(java.time.ZoneOffset.UTC);
         this.isDeleted = false;
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now(java.time.ZoneOffset.UTC);
     }
 }

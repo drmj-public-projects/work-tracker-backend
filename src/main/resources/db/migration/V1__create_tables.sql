@@ -44,7 +44,7 @@ CREATE TABLE user_organizations (
 -- ORGANIZATION SETTINGS
 CREATE TABLE organization_settings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    organization_id UUID NOT NULL,
+    organization_id UUID NOT NULL UNIQUE,
 
     require_location BOOLEAN DEFAULT FALSE,
     allow_manual_entries BOOLEAN DEFAULT TRUE,
@@ -52,7 +52,9 @@ CREATE TABLE organization_settings (
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_org_settings FOREIGN KEY (organization_id) REFERENCES organizations(id)
+    CONSTRAINT fk_org_settings
+        FOREIGN KEY (organization_id)
+        REFERENCES organizations(id)
 );
 -- PLACES
 CREATE TABLE places (
