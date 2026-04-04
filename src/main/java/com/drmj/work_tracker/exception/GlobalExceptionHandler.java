@@ -19,4 +19,24 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBusinessException(BusinessException ex) {
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>(
+                        ApiResponseConstants.FAIL_CODE,
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleException(Exception ex) {
+        return ResponseEntity.internalServerError()
+                .body(new ApiResponse<>(
+                        ApiResponseConstants.ERROR_CODE,
+                        ApiResponseConstants.ERROR_MESSAGE,
+                        null
+                ));
+    }
 }

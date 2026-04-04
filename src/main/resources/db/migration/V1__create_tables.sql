@@ -36,6 +36,11 @@ CREATE TABLE user_organizations (
     role VARCHAR(20) NOT NULL, -- EMPLOYEE, EMPLOYER, ADMIN
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    updated_by UUID,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT FALSE,
 
     CONSTRAINT fk_uo_user FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_uo_org FOREIGN KEY (organization_id) REFERENCES organizations(id),
@@ -51,6 +56,11 @@ CREATE TABLE organization_settings (
     allow_edit_after_submit BOOLEAN DEFAULT TRUE,
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    updated_by UUID,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT FALSE,
 
     CONSTRAINT fk_org_settings
         FOREIGN KEY (organization_id)
