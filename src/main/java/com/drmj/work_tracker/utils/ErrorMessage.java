@@ -12,7 +12,9 @@ public enum ErrorMessage {
     LOCATION_REQUIRED("Location is required"),
     USER_HAS_ACTIVE_SESSION("User already has an active session"),
     RESOURCE_NOT_FOUND("Resource not found"),
-    PLACE_NOT_IN_ORG( "Place does not belong to organization");
+    PLACE_NOT_IN_ORG("Place does not belong to organization"),
+    SESSION_NOT_ACTIVE("The workSession is not in active status"),
+    USER_NOT_OWNER_OF_SESSION("The user is not the owner of work session");
 
     private final String message;
 

@@ -28,13 +28,22 @@ public class WorkSession extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private UUID userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    @Column(name = "organization_id", insertable = false, updatable = false)
+    private UUID organizationId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    @Column(name = "place_id", insertable = false, updatable = false)
+    private UUID placeId;
 
     @Column(name = "start_time", nullable = false)
     private java.time.OffsetDateTime startTime;
