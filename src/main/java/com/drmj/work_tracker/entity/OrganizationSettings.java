@@ -14,7 +14,7 @@ import java.util.UUID;
                 @UniqueConstraint(name = "uq_org_settings", columnNames = "organization_id")
         }
 )
-@SQLDelete(sql = "UPDATE places SET is_deleted = true, deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE organization_settings SET is_deleted = true, deleted_at = now() WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
