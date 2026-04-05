@@ -8,7 +8,6 @@ import com.drmj.work_tracker.entity.Place;
 import com.drmj.work_tracker.entity.WorkSession;
 import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.service.*;
-import com.drmj.work_tracker.utils.ApiResponseConstants;
 import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,12 +23,7 @@ public class StartWorkSessionUseCase {
     public ApiResponse<WorkSessionResponse> execute(StartWorkSessionRequest request) {
         this.validateRequest(request);
         WorkSession workSession = workSessionService.startSession(request);
-
-        return new ApiResponse<>(
-                ApiResponseConstants.SUCCESS_CODE,
-                ApiResponseConstants.SUCCESS_MESSAGE,
-                WorkSessionResponse.fromEntity(workSession)
-        );
+        return new ApiResponse<>(WorkSessionResponse.fromEntity(workSession));
     }
 
     public void validateRequest(StartWorkSessionRequest request) {

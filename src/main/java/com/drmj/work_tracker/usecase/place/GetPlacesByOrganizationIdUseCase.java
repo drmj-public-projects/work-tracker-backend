@@ -6,7 +6,6 @@ import com.drmj.work_tracker.entity.Place;
 import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.service.OrganizationService;
 import com.drmj.work_tracker.service.PlaceService;
-import com.drmj.work_tracker.utils.ApiResponseConstants;
 import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,6 @@ public class GetPlacesByOrganizationIdUseCase {
         this.validateOrganization(organizationId);
         List<Place> placeList =  placeService.getAllByOrganizationId(organizationId);
         return new ApiResponse<>(
-                ApiResponseConstants.SUCCESS_CODE,
-                ApiResponseConstants.SUCCESS_MESSAGE,
                 placeList.stream()
                         .map(PlaceResponse::buildFromPlace)
                         .collect(Collectors.toList())
