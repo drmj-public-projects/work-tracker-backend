@@ -20,6 +20,8 @@ public class CreateManualWorkSessionRequest {
     private OffsetDateTime startTime;
     @NotNull
     private OffsetDateTime endTime;
+    @NotNull
+    private int breakMinutes;
     private String notes;
     private Double latitude;
     private Double longitude;

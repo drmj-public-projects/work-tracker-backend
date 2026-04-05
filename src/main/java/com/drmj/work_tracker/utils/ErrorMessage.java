@@ -17,7 +17,10 @@ public enum ErrorMessage {
     USER_NOT_OWNER_OF_SESSION("The user is not the owner of work session"),
     INVALID_TIME_RANGE("Invalid time range"),
     MANUAL_NOT_ALLOWED("Register manual workSession is not allowed"),
-    SESSION_OVERLAP("The user already have a session in the range time");
+    SESSION_OVERLAP("The user already have a session in the range time"),
+    USER_WITH_NOT_PERMISSION_TO_UPDATE_WORK_SESSION("You do not have permission to update this work session"),
+    ONLY_COMPLETED_SESSIONS_CAN_BE_UPDATED("Only completed work sessions can be edited"),
+    NEW_RANGE_OVERLAPS("The new time range overlaps with another work session");
 
     private final String message;
 

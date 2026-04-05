@@ -24,4 +24,22 @@ public interface WorkSessionRepository extends JpaRepository<WorkSession, UUID> 
           )
     """)
     boolean existsOverlappingSession(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime);
+
+    @Query("""
+    SELECT COUNT(ws) > 0
+    FROM WorkSession ws
+    WHERE ws.userId = :userId
+      AND ws.isDeleted = false
+      AND ws.id <> :excludeId
+      AND (
+            ws.startTime < :endTime AND
+            (ws.endTime IS NULL OR ws.endTime > :startTime)
+          )
+    """)
+    boolean existsOverlappingSession(
+            UUID userId,
+            OffsetDateTime startTime,
+            OffsetDateTime endTime,
+            UUID excludeId
+    );
 }

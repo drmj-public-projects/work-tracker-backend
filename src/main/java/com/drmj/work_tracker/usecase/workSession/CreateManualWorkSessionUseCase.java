@@ -12,6 +12,7 @@ import com.drmj.work_tracker.service.PlaceService;
 import com.drmj.work_tracker.service.UserOrganizationService;
 import com.drmj.work_tracker.service.WorkSessionService;
 import com.drmj.work_tracker.utils.ErrorMessage;
+import com.drmj.work_tracker.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +26,18 @@ public class CreateManualWorkSessionUseCase {
 
     public ApiResponse<WorkSessionResponse> execute(CreateManualWorkSessionRequest request) {
         validate(request);
-        WorkSession session = workSessionService.createManualSession(request);
+        int durationMinutes = Utils.calculateDurationMinutes(
+                request.getStartTime(),
+                request.getEndTime(),
+                request.getBreakMinutes()
+        );
+        double locationAccuracy = getLocationAccuracy();
+        WorkSession session = workSessionService.createManualSession(request, durationMinutes, locationAccuracy);
         return new ApiResponse<>(WorkSessionResponse.fromEntity(session));
     }
 
     private void validate(CreateManualWorkSessionRequest request) {
-        if (request.getEndTime().isBefore(request.getStartTime())) {
+        if (!Utils.isValidTimeRange(request.getStartTime(), request.getEndTime())) {
             throw new BusinessException(ErrorMessage.INVALID_TIME_RANGE.getMessage());
         }
 
@@ -63,5 +70,9 @@ public class CreateManualWorkSessionUseCase {
         if (overlaps) {
             throw new BusinessException(ErrorMessage.SESSION_OVERLAP.getMessage());
         }
+    }
+
+    private double getLocationAccuracy() {
+        return 0.0;
     }
 }

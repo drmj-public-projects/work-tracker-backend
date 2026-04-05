@@ -12,9 +12,13 @@ public interface WorkSessionService {
 
     WorkSession startSession(StartWorkSessionRequest request);
 
-    WorkSession endSession(WorkSession workSession);
+    WorkSession endSession(WorkSession workSession, int durationMinutes);
 
     boolean existsOverlappingSession(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime);
 
-    WorkSession createManualSession(CreateManualWorkSessionRequest request);
+    WorkSession createManualSession(CreateManualWorkSessionRequest request, int breakMinutes, double locationAccuracy);
+
+    WorkSession update(WorkSession newEntity);
+
+    boolean existsOverlappingSessionExcludingId(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime, UUID excludedId);
 }

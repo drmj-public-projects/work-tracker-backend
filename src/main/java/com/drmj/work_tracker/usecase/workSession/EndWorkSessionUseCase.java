@@ -10,6 +10,7 @@ import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -19,7 +20,8 @@ public class EndWorkSessionUseCase {
 
     public ApiResponse<WorkSessionResponse> execute(UUID workSessionId, UUID userId) {
         WorkSession session = this.validateWorkSession(workSessionId, userId);
-        WorkSession updated = workSessionService.endSession(session);
+        int durationMinutes = calculateDuration(session);
+        WorkSession updated = workSessionService.endSession(session, durationMinutes);
         return new ApiResponse<>(WorkSessionResponse.fromEntity(updated));
     }
 
@@ -32,5 +34,14 @@ public class EndWorkSessionUseCase {
             throw new BusinessException(ErrorMessage.SESSION_NOT_ACTIVE.getMessage());
         }
         return workSession;
+    }
+
+    private int calculateDuration(WorkSession workSession) {
+        OffsetDateTime now = OffsetDateTime.now(java.time.ZoneOffset.UTC);
+        workSession.setEndTime(now);
+        return (int) java.time.Duration.between(
+                workSession.getStartTime(),
+                now
+        ).toMinutes() - workSession.getBreakMinutes();
     }
 }

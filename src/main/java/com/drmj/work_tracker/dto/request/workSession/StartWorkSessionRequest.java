@@ -15,6 +15,8 @@ public class StartWorkSessionRequest {
     private UUID organizationId;
     @NotNull
     private UUID placeId;
+    @NotNull
+    private int breakMinutes;
     private Double latitude;
     private Double longitude;
     private String notes;

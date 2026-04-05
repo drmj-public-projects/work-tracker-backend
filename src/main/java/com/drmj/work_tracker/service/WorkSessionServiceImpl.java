@@ -7,6 +7,7 @@ import com.drmj.work_tracker.entity.Place;
 import com.drmj.work_tracker.entity.User;
 import com.drmj.work_tracker.entity.WorkSession;
 import com.drmj.work_tracker.entity.enums.WorkSessionEntryType;
+import com.drmj.work_tracker.entity.enums.WorkSessionSource;
 import com.drmj.work_tracker.entity.enums.WorkSessionStatus;
 import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.exception.NotFoundException;
@@ -52,6 +53,7 @@ public class WorkSessionServiceImpl implements WorkSessionService {
                 .organization(orgProxy)
                 .place(placeProxy)
                 .startTime(OffsetDateTime.now(java.time.ZoneOffset.UTC))
+                .breakMinutes(request.getBreakMinutes())
                 .status(WorkSessionStatus.ACTIVE)
                 .entryType(WorkSessionEntryType.TIMER)
                 .latitude(request.getLatitude())
@@ -62,14 +64,8 @@ public class WorkSessionServiceImpl implements WorkSessionService {
     }
 
     @Override
-    public WorkSession endSession(WorkSession workSession) {
-        OffsetDateTime now = OffsetDateTime.now(java.time.ZoneOffset.UTC);
-        workSession.setEndTime(now);
-        long minutes = java.time.Duration.between(
-                workSession.getStartTime(),
-                now
-        ).toMinutes();
-        workSession.setDurationMinutes((int) minutes);
+    public WorkSession endSession(WorkSession workSession, int durationMinutes) {
+        workSession.setDurationMinutes(durationMinutes);
         workSession.setStatus(WorkSessionStatus.COMPLETED);
         return workSessionRepository.save(workSession);
     }
@@ -80,27 +76,37 @@ public class WorkSessionServiceImpl implements WorkSessionService {
     }
 
     @Override
-    public WorkSession createManualSession(CreateManualWorkSessionRequest request) {
+    public WorkSession createManualSession(CreateManualWorkSessionRequest request, int durationMinutes, double locationAccuracy) {
         User userProxy = entityManager.getReference(User.class, request.getUserId());
         Organization orgProxy = entityManager.getReference(Organization.class, request.getOrganizationId());
         Place placeProxy = entityManager.getReference(Place.class, request.getPlaceId());
-        long durationMinutes = java.time.Duration.between(
-                request.getStartTime(),
-                request.getEndTime()
-        ).toMinutes();
         WorkSession session = WorkSession.builder()
                 .user(userProxy)
                 .organization(orgProxy)
                 .place(placeProxy)
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
-                .durationMinutes((int) durationMinutes)
+                .durationMinutes(durationMinutes)
                 .status(WorkSessionStatus.COMPLETED)
+                .breakMinutes(request.getBreakMinutes())
                 .entryType(WorkSessionEntryType.MANUAL)
+                .source(WorkSessionSource.WEB)
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
+                .locationAccuracy(locationAccuracy)
+                .isEdited(false)
                 .notes(request.getNotes())
                 .build();
         return workSessionRepository.save(session);
+    }
+
+    @Override
+    public WorkSession update(WorkSession newEntity) {
+        return workSessionRepository.save(newEntity);
+    }
+
+    @Override
+    public boolean existsOverlappingSessionExcludingId(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime, UUID excludedId) {
+        return workSessionRepository.existsOverlappingSession(userId, startTime, endTime, excludedId);
     }
 }

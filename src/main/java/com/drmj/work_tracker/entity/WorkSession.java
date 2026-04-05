@@ -54,8 +54,8 @@ public class WorkSession extends BaseEntity {
     @Column(name = "duration_minutes")
     private Integer durationMinutes;
 
-    @Column(name = "break_minutes")
-    private Integer breakMinutes;
+    @Column(name = "break_minutes", nullable = false)
+    private int breakMinutes = 0;
 
     private String notes;
 
