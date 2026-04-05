@@ -1,8 +1,10 @@
 package com.drmj.work_tracker.service;
 
+import com.drmj.work_tracker.dto.request.workSession.CreateManualWorkSessionRequest;
 import com.drmj.work_tracker.dto.request.workSession.StartWorkSessionRequest;
 import com.drmj.work_tracker.entity.WorkSession;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public interface WorkSessionService {
@@ -11,4 +13,8 @@ public interface WorkSessionService {
     WorkSession startSession(StartWorkSessionRequest request);
 
     WorkSession endSession(WorkSession workSession);
+
+    boolean existsOverlappingSession(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime);
+
+    WorkSession createManualSession(CreateManualWorkSessionRequest request);
 }

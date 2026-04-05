@@ -25,6 +25,9 @@ public class Place extends BaseEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    @Column(name = "organization_id", insertable = false, updatable = false)
+    private UUID organizationId;
+
     @Column(nullable = false)
     private String name;
 

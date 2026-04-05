@@ -24,9 +24,9 @@ public class WorkSessionResponse {
     public static WorkSessionResponse fromEntity(WorkSession entity) {
         return WorkSessionResponse.builder()
                 .id(entity.getId())
-                .userId(entity.getUserId() != null ? entity.getUserId() : null)
-                .organizationId(entity.getOrganizationId() != null ? entity.getOrganizationId() : null)
-                .placeId(entity.getPlaceId() != null ? entity.getPlaceId() : null)
+                .userId(entity.getUser() != null ? entity.getUser().getId() : null)
+                .organizationId(entity.getOrganization() != null ? entity.getOrganization().getId() : null)
+                .placeId(entity.getPlace() != null ? entity.getPlace().getId() : null)
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .durationMinutes(entity.getDurationMinutes())

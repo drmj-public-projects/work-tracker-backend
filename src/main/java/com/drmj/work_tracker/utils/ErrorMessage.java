@@ -14,7 +14,10 @@ public enum ErrorMessage {
     RESOURCE_NOT_FOUND("Resource not found"),
     PLACE_NOT_IN_ORG("Place does not belong to organization"),
     SESSION_NOT_ACTIVE("The workSession is not in active status"),
-    USER_NOT_OWNER_OF_SESSION("The user is not the owner of work session");
+    USER_NOT_OWNER_OF_SESSION("The user is not the owner of work session"),
+    INVALID_TIME_RANGE("Invalid time range"),
+    MANUAL_NOT_ALLOWED("Register manual workSession is not allowed"),
+    SESSION_OVERLAP("The user already have a session in the range time");
 
     private final String message;
 
