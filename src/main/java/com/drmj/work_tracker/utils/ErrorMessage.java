@@ -20,7 +20,10 @@ public enum ErrorMessage {
     SESSION_OVERLAP("The user already have a session in the range time"),
     USER_WITH_NOT_PERMISSION_TO_UPDATE_WORK_SESSION("You do not have permission to update this work session"),
     ONLY_COMPLETED_SESSIONS_CAN_BE_UPDATED("Only completed work sessions can be edited"),
-    NEW_RANGE_OVERLAPS("The new time range overlaps with another work session");
+    NEW_RANGE_OVERLAPS("The new time range overlaps with another work session"),
+    USER_WITH_EMAIL_NOT_FOUND("User with email does not been found"),
+    INVALID_CREDENTIALS("Invalid credentials"),
+    USER_NOT_ACCESS_TO_ORGANIZATION("The user does not have access to this organization");
 
     private final String message;
 
