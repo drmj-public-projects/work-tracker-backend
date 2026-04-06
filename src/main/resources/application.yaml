@@ -18,8 +18,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 jwt:
-  private-key-location: classpath:jwt/private_key.pem
-  public-key-location: classpath:jwt/public_key.pem
+  private-key-location: file:${JWT_PRIVATE_KEY}
+  public-key-location: file:${JWT_PUBLIC_KEY}
   expiration-seconds: 3600
 server:
   port: 8080

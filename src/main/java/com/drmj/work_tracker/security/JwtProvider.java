@@ -29,6 +29,12 @@ public class JwtProvider {
     private RSAPrivateKey privateKey;
     private RSAPublicKey publicKey;
 
+    @Value("${jwt.private-key-location}")
+    private String privateKeyLocation;
+
+    @Value("${jwt.public-key-location}")
+    private String publicKeyLocation;
+
     @Value("${jwt.expiration-seconds}")
     private long expiration;
 
@@ -36,14 +42,14 @@ public class JwtProvider {
     public void init() throws Exception {
         KeyFactory kf = KeyFactory.getInstance("RSA");
 
-        try (InputStream is = resourceLoader.getResource("classpath:jwt/private_key.pem").getInputStream()) {
+        try (InputStream is = resourceLoader.getResource(privateKeyLocation).getInputStream()) {
             String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ PRIVATE KEY-----", "").replaceAll("\\s", "");
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
             privateKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
         }
 
-        try (InputStream is = resourceLoader.getResource("classpath:jwt/public_key.pem").getInputStream()) {
+        try (InputStream is = resourceLoader.getResource(publicKeyLocation).getInputStream()) {
             String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ PUBLIC KEY-----", "").replaceAll("\\s", "");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(key));

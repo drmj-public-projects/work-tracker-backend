@@ -20,3 +20,8 @@ logs/
 # Temporary files
 *.tmp
 *.swp
+
+# JWT keys
+*.pem
+jwt/
+keys/
