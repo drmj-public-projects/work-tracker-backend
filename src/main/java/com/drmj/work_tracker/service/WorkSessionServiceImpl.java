@@ -158,6 +158,7 @@ public class WorkSessionServiceImpl implements WorkSessionService {
 
     @Override
     public WorkSession updateSessionTimes(WorkSession session, OffsetDateTime startTime, OffsetDateTime endTime, Integer breakMinutes) {
+        boolean startTimeChanged = !session.getStartTime().isEqual(startTime);
         session.setStartTime(startTime);
         session.setEndTime(endTime);
         if (breakMinutes != null) {
@@ -168,7 +169,20 @@ public class WorkSessionServiceImpl implements WorkSessionService {
                 endTime,
                 session.getBreakMinutes());
         session.setDurationMinutes(duration);
+
         BigDecimal hourlyRate = session.getHourlyRate();
+        if (startTimeChanged) {
+            hourlyRate = hourlyRateRepository.findActiveRate(
+                            session.getUserId(),
+                            session.getOrganizationId(),
+                            session.getPlaceId(),
+                            startTime
+                    )
+                    .map(HourlyRate::getRate)
+                    .orElseThrow(() -> new BusinessException(ErrorMessage.HOURLY_RATE_NOT_FOUND_MESSAGE.getMessage()));
+            session.setHourlyRate(hourlyRate);
+        }
+
         session.setTotalPay(calculateTotalPay(duration, hourlyRate));
         session.setIsEdited(true);
         session.setEditedAt(OffsetDateTime.now(java.time.ZoneOffset.UTC));
