@@ -103,6 +103,9 @@ CREATE TABLE work_sessions (
     entry_type VARCHAR(20) DEFAULT 'MANUAL', -- MANUAL, TIMER
     source VARCHAR(20), -- WEB, MOBILE
 
+    hourly_rate NUMERIC(10,2) NOT NULL,
+    total_pay NUMERIC(10,2),
+
     -- ubicación opcional
     latitude DECIMAL(10, 8),
     longitude DECIMAL(11, 8),
@@ -125,5 +128,34 @@ CREATE TABLE work_sessions (
 
     CONSTRAINT chk_time_valid CHECK (
         end_time IS NULL OR end_time > start_time
+    )
+);
+
+-- HOURLY RATES
+CREATE TABLE hourly_rates (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    user_id UUID NOT NULL,
+    organization_id UUID NOT NULL,
+    place_id UUID NOT NULL,
+
+    rate NUMERIC(10,2) NOT NULL,
+
+    valid_from TIMESTAMP WITH TIME ZONE NOT NULL,
+    valid_to TIMESTAMP WITH TIME ZONE,
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    updated_by UUID,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_hr_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_hr_org FOREIGN KEY (organization_id) REFERENCES organizations(id),
+    CONSTRAINT fk_hr_place FOREIGN KEY (place_id) REFERENCES places(id),
+
+    CONSTRAINT chk_hr_valid_dates CHECK (
+        valid_to IS NULL OR valid_to > valid_from
     )
 );

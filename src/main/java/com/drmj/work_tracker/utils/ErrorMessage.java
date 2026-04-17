@@ -1,7 +1,9 @@
 package com.drmj.work_tracker.utils;
 
-public enum ErrorMessage {
+import lombok.Getter;
 
+@Getter
+public enum ErrorMessage {
     PLACE_NOT_FOUND_MESSAGE("Place not found"),
     WORK_SESSION_NOT_FOUND_MESSAGE("WorkSession not found"),
     USER_NOT_FOUND_MESSAGE("User not found"),
@@ -23,13 +25,12 @@ public enum ErrorMessage {
     NEW_RANGE_OVERLAPS("The new time range overlaps with another work session"),
     USER_WITH_EMAIL_NOT_FOUND("User with email does not been found"),
     INVALID_CREDENTIALS("Invalid credentials"),
-    USER_NOT_ACCESS_TO_ORGANIZATION("The user does not have access to this organization");
+    USER_NOT_ACCESS_TO_ORGANIZATION("The user does not have access to this organization"),
+    HOURLY_RATE_NOT_FOUND_MESSAGE("The place does not have an hourly rate configured");
 
     private final String message;
 
     ErrorMessage( String message) {
         this.message = message;
     }
-
-    public String getMessage() { return message; }
 }

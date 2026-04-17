@@ -23,8 +23,12 @@ public class UpdateWorkSessionUseCase {
     public ApiResponse<WorkSessionResponse> execute(UUID id, UpdateWorkSessionRequest request, UUID currentUserId) {
         WorkSession workSession = validateRequest(id, currentUserId);
         validateTime(request, workSession);
-        applyTimeUpdates(workSession, request);
-        WorkSession updated = workSessionService.update(workSession);
+        WorkSession updated = workSessionService.updateSessionTimes(
+                workSession,
+                request.getStartTime(),
+                request.getEndTime(),
+                request.getBreakMinutes()
+        );
         return new ApiResponse<>(WorkSessionResponse.fromEntity(updated));
     }
 
@@ -54,19 +58,4 @@ public class UpdateWorkSessionUseCase {
         }
     }
 
-    private void applyTimeUpdates(WorkSession entity, UpdateWorkSessionRequest request) {
-        entity.setStartTime(request.getStartTime());
-        entity.setEndTime(request.getEndTime());
-        if (request.getBreakMinutes() != null) {
-            entity.setBreakMinutes(request.getBreakMinutes());
-        }
-        int duration = Utils.calculateDurationMinutes(
-                request.getStartTime(),
-                request.getEndTime(),
-                entity.getBreakMinutes());
-        entity.setDurationMinutes(duration);
-        entity.setIsEdited(true);
-        entity.setEditedAt(OffsetDateTime.now(java.time.ZoneOffset.UTC));
-        entity.setUpdatedAt(OffsetDateTime.now(java.time.ZoneOffset.UTC));
-    }
 }

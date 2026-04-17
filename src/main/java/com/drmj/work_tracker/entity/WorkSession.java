@@ -66,6 +66,12 @@ public class WorkSession extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WorkSessionSource source;
 
+    @Column(name = "hourly_rate", nullable = false, precision = 10, scale = 2)
+    private java.math.BigDecimal hourlyRate;
+
+    @Column(name = "total_pay", nullable = false, precision = 10, scale = 2)
+    private java.math.BigDecimal totalPay;
+
     private Double latitude;
     private Double longitude;
 
