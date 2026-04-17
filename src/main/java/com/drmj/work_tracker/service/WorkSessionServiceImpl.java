@@ -65,8 +65,11 @@ public class WorkSessionServiceImpl implements WorkSessionService {
 
         WorkSession session = WorkSession.builder()
                 .user(userProxy)
+                .userId(userProxy.getId())
                 .organization(orgProxy)
+                .organizationId(orgProxy.getId())
                 .place(place)
+                .placeId(place.getId())
                 .startTime(startTime)
                 .breakMinutes(request.getBreakMinutes())
                 .status(WorkSessionStatus.ACTIVE)
