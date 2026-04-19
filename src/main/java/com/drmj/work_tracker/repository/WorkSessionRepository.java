@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -41,5 +42,20 @@ public interface WorkSessionRepository extends JpaRepository<WorkSession, UUID> 
             OffsetDateTime startTime,
             OffsetDateTime endTime,
             UUID excludeId
+    );
+
+    @Query("""
+    SELECT ws FROM WorkSession ws
+    WHERE ws.placeId = :placeId
+      AND ws.userId = :userId
+      AND ws.startTime BETWEEN :start AND :end
+      AND (:status IS NULL OR ws.status IN :status)
+    """)
+    List<WorkSession> findByFilters(
+            UUID placeId,
+            OffsetDateTime start,
+            OffsetDateTime end,
+            List<WorkSessionStatus> status,
+            UUID userId
     );
 }

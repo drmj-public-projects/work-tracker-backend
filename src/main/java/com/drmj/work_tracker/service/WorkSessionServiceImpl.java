@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -196,5 +197,10 @@ public class WorkSessionServiceImpl implements WorkSessionService {
     @Override
     public boolean existsOverlappingSessionExcludingId(UUID userId, OffsetDateTime startTime, OffsetDateTime endTime, UUID excludedId) {
         return workSessionRepository.existsOverlappingSession(userId, startTime, endTime, excludedId);
+    }
+
+    @Override
+    public List<WorkSession> findByFilters(UUID placeId, OffsetDateTime start, OffsetDateTime end, List<WorkSessionStatus> status, UUID userId) {
+        return workSessionRepository.findByFilters(placeId, start, end, status, userId);
     }
 }
