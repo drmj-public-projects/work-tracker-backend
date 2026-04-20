@@ -1,9 +1,6 @@
 package com.drmj.work_tracker.controller;
 
-import com.drmj.work_tracker.dto.request.workSession.CreateManualWorkSessionRequest;
-import com.drmj.work_tracker.dto.request.workSession.StartWorkSessionRequest;
-import com.drmj.work_tracker.dto.request.workSession.UpdateWorkSessionRequest;
-import com.drmj.work_tracker.dto.request.workSession.WorkSessionPlaceSummaryQuery;
+import com.drmj.work_tracker.dto.request.workSession.*;
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.dto.response.workSession.WorkSessionResponse;
 import com.drmj.work_tracker.dto.response.workSession.WorkSessionSummaryResponse;
@@ -26,6 +23,7 @@ public class WorkSessionController {
     private final CreateManualWorkSessionUseCase createManualWorkSessionUseCase;
     private final UpdateWorkSessionUseCase updateWorkSessionUseCase;
     private final GetWorkSessionByPlaceIdUseCase getWorkSessionByPlaceIdUseCase;
+    private final GetWorkSessionDetailUseCase getWorkSessionDetailUseCase;
 
     @PostMapping("/start")
     public ApiResponse<WorkSessionResponse> start(
@@ -78,5 +76,23 @@ public class WorkSessionController {
                 .endDate(endDate)
                 .build();
         return getWorkSessionByPlaceIdUseCase.execute(query);
+      }
+
+      @GetMapping()
+      public ApiResponse<List<WorkSessionResponse>> getWorkSessions(
+              @RequestParam UUID placeId,
+              @RequestParam UUID userId,
+              @RequestParam OffsetDateTime startDate,
+              @RequestParam OffsetDateTime endDate,
+              @RequestParam(required = false) List<WorkSessionStatus> status
+      ) {
+          WorkSessionDetailQuery query = WorkSessionDetailQuery.builder()
+                  .placeId(placeId)
+                  .startDate(startDate)
+                  .endDate(endDate)
+                  .status(status)
+                  .userId(userId)
+                  .build();
+          return getWorkSessionDetailUseCase.execute(query);
       }
 }

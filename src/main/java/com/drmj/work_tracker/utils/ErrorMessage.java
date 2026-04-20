@@ -19,6 +19,7 @@ public enum ErrorMessage {
     USER_NOT_OWNER_OF_SESSION("The user is not the owner of work session"),
     INVALID_TIME_RANGE("Invalid time range"),
     INVALID_GROUP_BY("Invalid groupBy: "),
+    PLACE_ID_REQUIRED("PlaceId is required"),
     MANUAL_NOT_ALLOWED("Register manual workSession is not allowed"),
     SESSION_OVERLAP("The user already have a session in the range time"),
     USER_WITH_NOT_PERMISSION_TO_UPDATE_WORK_SESSION("You do not have permission to update this work session"),
@@ -28,7 +29,8 @@ public enum ErrorMessage {
     INVALID_CREDENTIALS("Invalid credentials"),
     USER_NOT_ACCESS_TO_ORGANIZATION("The user does not have access to this organization"),
     HOURLY_RATE_NOT_FOUND_MESSAGE("The place does not have an hourly rate configured"),
-    START_AND_END_DATE_REQUIRED_IN_CUSTOM("StartDate and EndDate are required for CUSTOM");
+    START_AND_END_DATE_REQUIRED_IN_CUSTOM("StartDate and EndDate are required for CUSTOM"),
+    START_AND_END_DATE_REQUIRED("StartDate and EndDate are required");
 
     private final String message;
 
