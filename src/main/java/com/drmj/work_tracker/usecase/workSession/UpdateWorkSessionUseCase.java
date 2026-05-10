@@ -6,13 +6,13 @@ import com.drmj.work_tracker.dto.response.workSession.WorkSessionResponse;
 import com.drmj.work_tracker.entity.WorkSession;
 import com.drmj.work_tracker.entity.enums.WorkSessionStatus;
 import com.drmj.work_tracker.exception.BusinessException;
+import com.drmj.work_tracker.security.SecurityUtils;
 import com.drmj.work_tracker.service.WorkSessionService;
 import com.drmj.work_tracker.utils.ErrorMessage;
 import com.drmj.work_tracker.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -20,8 +20,8 @@ import java.util.UUID;
 public class UpdateWorkSessionUseCase {
     private final WorkSessionService workSessionService;
 
-    public ApiResponse<WorkSessionResponse> execute(UUID id, UpdateWorkSessionRequest request, UUID currentUserId) {
-        WorkSession workSession = validateRequest(id, currentUserId);
+    public ApiResponse<WorkSessionResponse> execute(UUID id, UpdateWorkSessionRequest request) {
+        WorkSession workSession = validateRequest(id, SecurityUtils.getCurrentUserId());
         validateTime(request, workSession);
         WorkSession updated = workSessionService.updateSessionTimes(
                 workSession,

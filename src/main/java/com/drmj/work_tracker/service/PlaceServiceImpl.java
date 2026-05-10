@@ -25,4 +25,14 @@ public class PlaceServiceImpl implements PlaceService {
     public List<Place> getAllByOrganizationId(UUID organizationId) {
         return placeRepository.findByOrganization_id(organizationId);
     }
+
+    @Override
+    public Place save(Place place) {
+        return placeRepository.save(place);
+    }
+
+    @Override
+    public boolean existsByNameAndOrganizationId(String name, UUID organizationId) {
+        return placeRepository.existsByNameIgnoreCaseAndOrganizationId(name, organizationId);
+    }
 }

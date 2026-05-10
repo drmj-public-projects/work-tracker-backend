@@ -30,7 +30,9 @@ public enum ErrorMessage {
     USER_NOT_ACCESS_TO_ORGANIZATION("The user does not have access to this organization"),
     HOURLY_RATE_NOT_FOUND_MESSAGE("The place does not have an hourly rate configured"),
     START_AND_END_DATE_REQUIRED_IN_CUSTOM("StartDate and EndDate are required for CUSTOM"),
-    START_AND_END_DATE_REQUIRED("StartDate and EndDate are required");
+    START_AND_END_DATE_REQUIRED("StartDate and EndDate are required"),
+    PLACE_ALREADY_EXISTS("Place with this name already exists in the organization"),
+    LOCATION_REQUIRED_FOR_ORG("Location is required for this organization");
 
     private final String message;
 

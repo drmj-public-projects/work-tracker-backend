@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, UUID> {
     List<Place> findByOrganization_id(UUID organizationId);
+
+    boolean existsByNameIgnoreCaseAndOrganizationId(String name, UUID organizationId);
 }

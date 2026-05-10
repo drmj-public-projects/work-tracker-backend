@@ -16,6 +16,7 @@ CREATE TABLE users (
     deleted_at TIMESTAMP WITH TIME ZONE,
     is_deleted BOOLEAN DEFAULT FALSE
 );
+
 -- ORGANIZATIONS
 CREATE TABLE organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -28,6 +29,7 @@ CREATE TABLE organizations (
     deleted_at TIMESTAMP WITH TIME ZONE,
     is_deleted BOOLEAN DEFAULT FALSE
 );
+
 -- USER_ORGANIZATIONS
 CREATE TABLE user_organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -46,6 +48,7 @@ CREATE TABLE user_organizations (
     CONSTRAINT fk_uo_org FOREIGN KEY (organization_id) REFERENCES organizations(id),
     CONSTRAINT uq_user_org UNIQUE (user_id, organization_id)
 );
+
 -- ORGANIZATION SETTINGS
 CREATE TABLE organization_settings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -66,13 +69,20 @@ CREATE TABLE organization_settings (
         FOREIGN KEY (organization_id)
         REFERENCES organizations(id)
 );
--- PLACES
+
+-- PLACES (ACTUALIZADO)
 CREATE TABLE places (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     organization_id UUID NOT NULL,
 
     name VARCHAR(255) NOT NULL,
     description TEXT,
+
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
+    radius_meters INTEGER,
+
+    is_active BOOLEAN DEFAULT TRUE,
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by UUID,
@@ -83,6 +93,7 @@ CREATE TABLE places (
 
     CONSTRAINT fk_places_org FOREIGN KEY (organization_id) REFERENCES organizations(id)
 );
+
 -- WORK SESSIONS
 CREATE TABLE work_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

@@ -32,4 +32,14 @@ public class Place extends BaseEntity {
     private String name;
 
     private String description;
+
+    private Double latitude;
+
+    private Double longitude;
+
+    @Column(name = "radius_meters")
+    private Integer radiusMeters;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 }

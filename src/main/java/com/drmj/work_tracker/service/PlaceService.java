@@ -9,4 +9,8 @@ public interface PlaceService {
     Place getById(UUID id);
 
     List<Place> getAllByOrganizationId(UUID organizationId);
+
+    Place save(Place place);
+
+    boolean existsByNameAndOrganizationId(String name, UUID organizationId);
 }

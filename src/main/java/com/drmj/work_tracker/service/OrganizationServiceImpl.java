@@ -1,6 +1,9 @@
 package com.drmj.work_tracker.service;
 
+import com.drmj.work_tracker.entity.Organization;
+import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.OrganizationRepository;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +17,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public boolean validateIfExists(UUID organizationId) {
         return organizationRepository.existsById(organizationId);
+    }
+
+    @Override
+    public Organization getById(UUID organizationId) {
+        return organizationRepository.findById(organizationId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ORGANIZATION_NOT_FOUND_MESSAGE.getMessage()));
     }
 }

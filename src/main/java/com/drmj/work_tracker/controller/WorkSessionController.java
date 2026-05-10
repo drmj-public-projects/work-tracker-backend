@@ -50,10 +50,9 @@ public class WorkSessionController {
     @PutMapping("/{id}")
     public ApiResponse<WorkSessionResponse> update(
             @PathVariable UUID id,
-            @RequestBody @Valid UpdateWorkSessionRequest request,
-            @RequestParam UUID currentUserId
+            @RequestBody @Valid UpdateWorkSessionRequest request
     ) {
-        return updateWorkSessionUseCase.execute(id, request, currentUserId);
+        return updateWorkSessionUseCase.execute(id, request);
     }
 
     @GetMapping("/summaryByPlaceId")

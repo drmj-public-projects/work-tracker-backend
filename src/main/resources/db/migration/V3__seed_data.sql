@@ -1,8 +1,9 @@
 -- =========================================
--- CLEAN DATABASE
+-- CLEAN DATABASE (orden correcto por FK)
 -- =========================================
 
 DELETE FROM work_sessions;
+DELETE FROM hourly_rates;
 DELETE FROM places;
 DELETE FROM organization_settings;
 DELETE FROM user_organizations;
@@ -15,10 +16,10 @@ DELETE FROM organizations;
 
 INSERT INTO users (id, email, name)
 VALUES
-    (uuid_generate_v4(), 'test@example.com', 'User Demo'),
-    (uuid_generate_v4(), 'employee1@example.com', 'Employee One'),
-    (uuid_generate_v4(), 'employee2@example.com', 'Employee Two'),
-    (uuid_generate_v4(), 'outsider@example.com', 'Outsider User');
+    (uuid_generate_v4(), 'admin@demo.com', 'Admin Demo'),
+    (uuid_generate_v4(), 'employee1@demo.com', 'Employee One'),
+    (uuid_generate_v4(), 'employee2@demo.com', 'Employee Two'),
+    (uuid_generate_v4(), 'outsider@demo.com', 'Outsider User');
 
 -- =========================================
 -- ORGANIZATIONS
@@ -36,18 +37,23 @@ VALUES
 INSERT INTO user_organizations (user_id, organization_id, role)
 VALUES
 -- Demo Company
-((SELECT id FROM users WHERE email='test@example.com'),
- (SELECT id FROM organizations WHERE name='Demo Company'),
- 'EMPLOYER'),
-
-((SELECT id FROM users WHERE email='employee1@example.com'),
- (SELECT id FROM organizations WHERE name='Demo Company'),
- 'EMPLOYEE'),
+(
+    (SELECT id FROM users WHERE email='admin@demo.com'),
+    (SELECT id FROM organizations WHERE name='Demo Company'),
+    'ADMIN'
+),
+(
+    (SELECT id FROM users WHERE email='employee1@demo.com'),
+    (SELECT id FROM organizations WHERE name='Demo Company'),
+    'EMPLOYEE'
+),
 
 -- Strict Company
-((SELECT id FROM users WHERE email='employee2@example.com'),
- (SELECT id FROM organizations WHERE name='Strict Company'),
- 'EMPLOYEE');
+(
+    (SELECT id FROM users WHERE email='employee2@demo.com'),
+    (SELECT id FROM organizations WHERE name='Strict Company'),
+    'EMPLOYEE'
+);
 
 -- =========================================
 -- ORGANIZATION SETTINGS
@@ -60,222 +66,195 @@ INSERT INTO organization_settings (
     allow_edit_after_submit
 )
 VALUES
--- Demo Company (flexible)
-(
-    (SELECT id FROM organizations WHERE name='Demo Company'),
-    FALSE,
-    TRUE,
-    TRUE
-),
-
--- Strict Company (restrictiva)
-(
-    (SELECT id FROM organizations WHERE name='Strict Company'),
-    TRUE,
-    FALSE,
-    FALSE
-);
+    (
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        FALSE, TRUE, TRUE
+    ),
+    (
+        (SELECT id FROM organizations WHERE name='Strict Company'),
+        TRUE, FALSE, FALSE
+    );
 
 -- =========================================
--- PLACES
+-- PLACES (con geolocalización)
 -- =========================================
 
-INSERT INTO places (organization_id, name, description)
+INSERT INTO places (
+    organization_id, name, description,
+    latitude, longitude, radius_meters
+)
 VALUES
--- Demo Company
-(
-    (SELECT id FROM organizations WHERE name='Demo Company'),
-    'Miss Toby Home',
-    'Cleaning job in Miss Toby home'
-),
-(
-    (SELECT id FROM organizations WHERE name='Demo Company'),
-    'Miss Chani Home',
-    'Cleaning job in Miss Chani home'
-),
-
--- Strict Company
-(
-    (SELECT id FROM organizations WHERE name='Strict Company'),
-    'Office HQ',
-    'Main office building'
-);
+    (
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        'Miss Toby Home',
+        'Cleaning job',
+        -17.3895, -66.1568, 100
+    ),
+    (
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        'Miss Chani Home',
+        'Cleaning job',
+        -17.3700, -66.1400, 120
+    ),
+    (
+        (SELECT id FROM organizations WHERE name='Strict Company'),
+        'Office HQ',
+        'Main office',
+        -17.3935, -66.1570, 80
+    );
 
 -- =========================================
--- WORK SESSIONS
+-- HOURLY RATES
 -- =========================================
 
--- COMPLETED SESSION
+-- Employee1 historial
+INSERT INTO hourly_rates (
+    user_id, organization_id, place_id,
+    rate, valid_from, valid_to
+)
+VALUES
+    (
+        (SELECT id FROM users WHERE email='employee1@demo.com'),
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        (SELECT id FROM places WHERE name='Miss Toby Home'),
+        8.00,
+        NOW() - INTERVAL '60 days',
+        NOW() - INTERVAL '30 days'
+    ),
+    (
+        (SELECT id FROM users WHERE email='employee1@demo.com'),
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        (SELECT id FROM places WHERE name='Miss Toby Home'),
+        10.00,
+        NOW() - INTERVAL '30 days',
+        NULL
+    );
+
+-- otro lugar
+INSERT INTO hourly_rates (
+    user_id, organization_id, place_id,
+    rate, valid_from
+)
+VALUES
+    (
+        (SELECT id FROM users WHERE email='employee1@demo.com'),
+        (SELECT id FROM organizations WHERE name='Demo Company'),
+        (SELECT id FROM places WHERE name='Miss Chani Home'),
+        12.50,
+        NOW() - INTERVAL '15 days'
+    );
+
+-- Employee2 aumento
+INSERT INTO hourly_rates (
+    user_id, organization_id, place_id,
+    rate, valid_from
+)
+VALUES
+    (
+        (SELECT id FROM users WHERE email='employee2@demo.com'),
+        (SELECT id FROM organizations WHERE name='Strict Company'),
+        (SELECT id FROM places WHERE name='Office HQ'),
+        15.00,
+        NOW() - INTERVAL '20 days'
+    ),
+    (
+        (SELECT id FROM users WHERE email='employee2@demo.com'),
+        (SELECT id FROM organizations WHERE name='Strict Company'),
+        (SELECT id FROM places WHERE name='Office HQ'),
+        18.00,
+        NOW() - INTERVAL '2 days'
+    );
+
+-- =========================================
+-- WORK SESSIONS (con total_pay y ubicación)
+-- =========================================
+
+-- COMPLETED
 INSERT INTO work_sessions (
     user_id, organization_id, place_id,
-    start_time, end_time, duration_minutes,
+    start_time, end_time,
+    duration_minutes, break_minutes,
     notes, status, entry_type, source,
-    hourly_rate
+    hourly_rate, total_pay,
+    latitude, longitude
 )
 VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
+           (SELECT id FROM users WHERE email='employee1@demo.com'),
            (SELECT id FROM organizations WHERE name='Demo Company'),
            (SELECT id FROM places WHERE name='Miss Toby Home'),
            NOW() - INTERVAL '5 hours',
            NOW() - INTERVAL '3 hours',
-           120,
-           'Completed cleaning job',
+           120, 10,
+           'Cleaning job',
            'COMPLETED',
            'TIMER',
            'WEB',
-           10.00
+           10.00,
+           20.00,
+           -17.3896, -66.1569
        );
 
--- ACTIVE SESSION
+-- ACTIVE
 INSERT INTO work_sessions (
     user_id, organization_id, place_id,
-    start_time, status, entry_type, source,
-    hourly_rate
+    start_time,
+    status, entry_type, source,
+    hourly_rate,
+    latitude, longitude
 )
 VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
+           (SELECT id FROM users WHERE email='employee1@demo.com'),
            (SELECT id FROM organizations WHERE name='Demo Company'),
            (SELECT id FROM places WHERE name='Miss Chani Home'),
            NOW() - INTERVAL '1 hour',
            'ACTIVE',
            'TIMER',
            'MOBILE',
-           12.50
+           12.50,
+           -17.3701, -66.1401
        );
 
--- MANUAL SESSION
+-- MANUAL
 INSERT INTO work_sessions (
     user_id, organization_id, place_id,
-    start_time, end_time, duration_minutes,
-    notes, status, entry_type, source,
-    hourly_rate
+    start_time, end_time,
+    duration_minutes,
+    notes, status, entry_type,
+    hourly_rate, total_pay
 )
 VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
+           (SELECT id FROM users WHERE email='employee1@demo.com'),
            (SELECT id FROM organizations WHERE name='Demo Company'),
            (SELECT id FROM places WHERE name='Miss Toby Home'),
            NOW() - INTERVAL '2 days',
            NOW() - INTERVAL '2 days' + INTERVAL '3 hours',
            180,
-           'Manual entry test',
+           'Manual entry',
            'COMPLETED',
            'MANUAL',
-           'WEB',
-           10.00
+           10.00,
+           30.00
        );
 
--- STRICT ORG
+-- EDITED
 INSERT INTO work_sessions (
     user_id, organization_id, place_id,
-    start_time, status, entry_type, source,
-    hourly_rate
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee2@example.com'),
-           (SELECT id FROM organizations WHERE name='Strict Company'),
-           (SELECT id FROM places WHERE name='Office HQ'),
-           NOW() - INTERVAL '30 minutes',
-           'ACTIVE',
-           'TIMER',
-           'MOBILE',
-           18.00
-       );
-
--- EDITED SESSION
-INSERT INTO work_sessions (
-    user_id, organization_id, place_id,
-    start_time, end_time, duration_minutes,
-    notes, status, entry_type,
+    start_time, end_time,
+    duration_minutes,
+    status,
     is_edited, edited_at,
-    hourly_rate
+    hourly_rate, total_pay
 )
 VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
+           (SELECT id FROM users WHERE email='employee1@demo.com'),
            (SELECT id FROM organizations WHERE name='Demo Company'),
            (SELECT id FROM places WHERE name='Miss Toby Home'),
            NOW() - INTERVAL '1 day',
            NOW() - INTERVAL '1 day' + INTERVAL '2 hours',
            120,
-           'Edited session',
            'COMPLETED',
-           'MANUAL',
            TRUE,
            NOW(),
-           10.00
-       );
-
--- =========================================
--- HOURLY RATES (DATA REALISTA)
--- =========================================
-
--- EMPLOYEE 1 - Demo Company - Miss Toby Home
--- tarifa antigua
-INSERT INTO hourly_rates (
-    user_id, organization_id, place_id,
-    rate, valid_from, valid_to
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
-           (SELECT id FROM organizations WHERE name='Demo Company'),
-           (SELECT id FROM places WHERE name='Miss Toby Home'),
-           8.00,
-           NOW() - INTERVAL '60 days',
-           NOW() - INTERVAL '30 days'
-       );
-
--- tarifa actual
-INSERT INTO hourly_rates (
-    user_id, organization_id, place_id,
-    rate, valid_from
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
-           (SELECT id FROM organizations WHERE name='Demo Company'),
-           (SELECT id FROM places WHERE name='Miss Toby Home'),
            10.00,
-           NOW() - INTERVAL '30 days'
-       );
-
--- =========================================
-
--- EMPLOYEE 1 - Demo Company - Miss Chani Home
-INSERT INTO hourly_rates (
-    user_id, organization_id, place_id,
-    rate, valid_from
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee1@example.com'),
-           (SELECT id FROM organizations WHERE name='Demo Company'),
-           (SELECT id FROM places WHERE name='Miss Chani Home'),
-           12.50,
-           NOW() - INTERVAL '15 days'
-       );
-
--- =========================================
-
--- EMPLOYEE 2 - Strict Company - Office HQ
--- tarifa base
-INSERT INTO hourly_rates (
-    user_id, organization_id, place_id,
-    rate, valid_from
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee2@example.com'),
-           (SELECT id FROM organizations WHERE name='Strict Company'),
-           (SELECT id FROM places WHERE name='Office HQ'),
-           15.00,
-           NOW() - INTERVAL '20 days'
-       );
-
--- aumento reciente
-INSERT INTO hourly_rates (
-    user_id, organization_id, place_id,
-    rate, valid_from
-)
-VALUES (
-           (SELECT id FROM users WHERE email='employee2@example.com'),
-           (SELECT id FROM organizations WHERE name='Strict Company'),
-           (SELECT id FROM places WHERE name='Office HQ'),
-           18.00,
-           NOW() - INTERVAL '2 days'
+           20.00
        );
