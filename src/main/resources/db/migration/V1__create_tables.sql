@@ -70,6 +70,33 @@ CREATE TABLE organization_settings (
         REFERENCES organizations(id)
 );
 
+CREATE TABLE invitation_codes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    organization_id UUID NOT NULL,
+
+    code VARCHAR(50) NOT NULL UNIQUE,
+
+    role VARCHAR(20) NOT NULL, -- EMPLOYEE, EMPLOYER, ADMIN
+
+    expires_at TIMESTAMP WITH TIME ZONE,
+    max_uses INTEGER DEFAULT 1,
+    current_uses INTEGER DEFAULT 0,
+
+    is_active BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    updated_by UUID,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_invite_org
+        FOREIGN KEY (organization_id)
+        REFERENCES organizations(id)
+);
+
 -- PLACES (ACTUALIZADO)
 CREATE TABLE places (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

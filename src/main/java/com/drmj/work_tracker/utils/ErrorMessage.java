@@ -32,7 +32,9 @@ public enum ErrorMessage {
     START_AND_END_DATE_REQUIRED_IN_CUSTOM("StartDate and EndDate are required for CUSTOM"),
     START_AND_END_DATE_REQUIRED("StartDate and EndDate are required"),
     PLACE_ALREADY_EXISTS("Place with this name already exists in the organization"),
-    LOCATION_REQUIRED_FOR_ORG("Location is required for this organization");
+    LOCATION_REQUIRED_FOR_ORG("Location is required for this organization"),
+    USER_NOT_AUTHORIZED_TO_GENERATE_CODE("User does not have permission to generate invitation codes"),
+    INVITATION_CODE_GENERATION_FAILED("Failed to generate unique invitation code");
 
     private final String message;
 
