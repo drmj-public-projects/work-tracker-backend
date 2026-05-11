@@ -2,6 +2,7 @@ package com.drmj.work_tracker.dto.response.invitationCode;
 
 import com.drmj.work_tracker.entity.InvitationCode;
 import com.drmj.work_tracker.entity.enums.UserOrganizationRole;
+import com.drmj.work_tracker.utils.Utils;
 import lombok.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -33,8 +34,8 @@ public class InvitationCodeResponse {
                 .maxUses(invitationCode.getMaxUses())
                 .currentUses(invitationCode.getCurrentUses())
                 .isActive(invitationCode.getIsActive())
-                .createdAt(invitationCode.getCreatedAt())
-                .updatedAt(invitationCode.getUpdatedAt())
+                .createdAt(Utils.toOffsetDateTime(invitationCode.getCreatedAt()))
+                .updatedAt(Utils.toOffsetDateTime(invitationCode.getUpdatedAt()))
                 .build();
     }
 }
