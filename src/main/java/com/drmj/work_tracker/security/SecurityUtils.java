@@ -1,6 +1,7 @@
 package com.drmj.work_tracker.security;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.UUID;
@@ -46,5 +47,18 @@ public class SecurityUtils {
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated();
+    }
+
+    public static String getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        return authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .map(role -> role.replaceFirst("^ROLE_", ""))
+                .orElseThrow(() -> new IllegalStateException("No role found"));
     }
 }

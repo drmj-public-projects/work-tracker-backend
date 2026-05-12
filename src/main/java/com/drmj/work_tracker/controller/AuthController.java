@@ -1,11 +1,14 @@
 package com.drmj.work_tracker.controller;
 
 import com.drmj.work_tracker.dto.request.auth.LoginRequest;
+import com.drmj.work_tracker.dto.request.auth.RegisterRequest;
 import com.drmj.work_tracker.dto.request.auth.SelectOrganizationRequest;
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.dto.response.auth.LoginResponse;
+import com.drmj.work_tracker.dto.response.auth.RegisterResponse;
 import com.drmj.work_tracker.dto.response.auth.TokenResponse;
 import com.drmj.work_tracker.service.AuthService;
+import com.drmj.work_tracker.usecase.auth.RegisterUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final RegisterUseCase registerUseCase;
 
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
@@ -34,5 +38,10 @@ public class AuthController {
     ) {
         UUID userId = UUID.fromString(authentication.getName());
         return new ApiResponse<>(authService.createTokenWithContext(userId, request.getOrganizationId()));
+    }
+
+    @PostMapping("/register")
+    public ApiResponse<RegisterResponse> register(@RequestBody @Valid RegisterRequest request) {
+        return registerUseCase.execute(request);
     }
 }

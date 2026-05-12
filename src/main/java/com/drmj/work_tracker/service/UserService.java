@@ -9,4 +9,8 @@ public interface UserService {
     User getById(UUID id);
 
     User getReference(UUID id);
+
+    User save(User user);
+
+    boolean existsByEmail(String email);
 }

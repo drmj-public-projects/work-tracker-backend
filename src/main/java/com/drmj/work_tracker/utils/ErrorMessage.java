@@ -38,7 +38,14 @@ public enum ErrorMessage {
     INVITATION_CODE_EXPIRED("Invitation code has expired"),
     INVITATION_CODE_MAX_USES_REACHED("Invitation code has reached maximum uses"),
     USER_ALREADY_MEMBER("User is already a member of this organization"),
-    INVITATION_CODE_GENERATION_FAILED("Failed to generate unique invitation code");
+    INVITATION_CODE_GENERATION_FAILED("Failed to generate unique invitation code"),
+    USER_EMAIL_ALREADY_EXISTS("User with this email already exists"),
+    USER_NAME_REQUIRED("User name is required"),
+    USER_EMAIL_REQUIRED("User email is required"),
+    USER_PASSWORD_REQUIRED("Password is required"),
+    PASSWORD_TOO_SHORT("Password must be at least 6 characters"),
+    USER_NOT_ALLOWED("The user does not have permission to register new users"),
+    REGISTRATION_FAILED("Registration failed, please try again");
 
     private final String message;
 
