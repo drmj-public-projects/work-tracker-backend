@@ -24,4 +24,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.findById(organizationId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.ORGANIZATION_NOT_FOUND_MESSAGE.getMessage()));
     }
+
+    @Override
+    public Organization getReference(UUID id) {
+        return organizationRepository.getReferenceById(id);
+    }
 }

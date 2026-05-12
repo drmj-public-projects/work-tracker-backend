@@ -11,4 +11,6 @@ public interface UserOrganizationService {
     UserOrganization findByUserIdAndOrganizationId(UUID userId, UUID organizationId);
 
     List<UserOrganization> findByUserId(UUID userId);
+
+    UserOrganization save(UserOrganization userOrganization);
 }

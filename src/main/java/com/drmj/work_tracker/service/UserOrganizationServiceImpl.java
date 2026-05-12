@@ -30,4 +30,9 @@ public class UserOrganizationServiceImpl implements UserOrganizationService {
     public List<UserOrganization> findByUserId(UUID userId) {
         return userOrganizationRepository.findByUser_id(userId);
     }
+
+    @Override
+    public UserOrganization save(UserOrganization userOrganization) {
+        return userOrganizationRepository.save(userOrganization);
+    }
 }

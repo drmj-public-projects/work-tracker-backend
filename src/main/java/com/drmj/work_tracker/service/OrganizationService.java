@@ -8,4 +8,6 @@ public interface OrganizationService {
     boolean validateIfExists(UUID organizationId);
 
     Organization getById(UUID organizationId);
+
+    Organization getReference(UUID id);
 }

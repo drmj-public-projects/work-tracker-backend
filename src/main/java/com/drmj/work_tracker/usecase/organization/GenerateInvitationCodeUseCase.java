@@ -40,7 +40,6 @@ public class GenerateInvitationCodeUseCase {
         InvitationCode invitationCode = buildInvitationCodeEntity(request, userRole);
         InvitationCode saved = invitationCodeService.save(invitationCode);
 
-        saved.setOrganizationId(request.getOrganizationId());
         return new ApiResponse<>(InvitationCodeResponse.fromEntity(saved));
     }
 
@@ -65,6 +64,7 @@ public class GenerateInvitationCodeUseCase {
 
         return InvitationCode.builder()
                 .organization(organization)
+                .organizationId(organization.getId())
                 .code(uniqueCode)
                 .role(userRole)
                 .expiresAt(request.getExpiresAt())

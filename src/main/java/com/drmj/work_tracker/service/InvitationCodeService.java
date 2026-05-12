@@ -8,4 +8,6 @@ public interface InvitationCodeService {
     boolean existsByCode(String code);
 
     String generateUniqueCode();
+
+    InvitationCode findByCode(String code);
 }

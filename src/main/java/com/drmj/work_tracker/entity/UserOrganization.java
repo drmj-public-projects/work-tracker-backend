@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserOrganization {
+public class UserOrganization extends BaseEntity {
     @Id
     @GeneratedValue
     private UUID id;

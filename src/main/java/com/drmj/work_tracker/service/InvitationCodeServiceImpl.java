@@ -1,7 +1,9 @@
 package com.drmj.work_tracker.service;
 
 import com.drmj.work_tracker.entity.InvitationCode;
+import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.InvitationCodeRepository;
+import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
@@ -36,6 +38,12 @@ public class InvitationCodeServiceImpl implements InvitationCodeService {
             }
         }
         throw new RuntimeException("Failed to generate unique invitation code after " + MAX_ATTEMPTS + " attempts");
+    }
+
+    @Override
+    public InvitationCode findByCode(String code) {
+        return invitationCodeRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.INVALID_INVITATION_CODE.getMessage()));
     }
 
     private String generateRandomCode() {

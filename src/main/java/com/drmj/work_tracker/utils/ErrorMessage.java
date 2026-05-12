@@ -34,6 +34,10 @@ public enum ErrorMessage {
     PLACE_ALREADY_EXISTS("Place with this name already exists in the organization"),
     LOCATION_REQUIRED_FOR_ORG("Location is required for this organization"),
     USER_NOT_AUTHORIZED_TO_GENERATE_CODE("User does not have permission to generate invitation codes"),
+    INVALID_INVITATION_CODE("Invalid or expired invitation code"),
+    INVITATION_CODE_EXPIRED("Invitation code has expired"),
+    INVITATION_CODE_MAX_USES_REACHED("Invitation code has reached maximum uses"),
+    USER_ALREADY_MEMBER("User is already a member of this organization"),
     INVITATION_CODE_GENERATION_FAILED("Failed to generate unique invitation code");
 
     private final String message;
