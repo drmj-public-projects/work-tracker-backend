@@ -45,7 +45,8 @@ public enum ErrorMessage {
     USER_PASSWORD_REQUIRED("Password is required"),
     PASSWORD_TOO_SHORT("Password must be at least 6 characters"),
     USER_NOT_ALLOWED("The user does not have permission to register new users"),
-    REGISTRATION_FAILED("Registration failed, please try again");
+    REGISTRATION_FAILED("Registration failed, please try again"),
+    USER_UPDATE_FAILED("Failed to update user profile");
 
     private final String message;
 

@@ -13,4 +13,6 @@ public interface UserService {
     User save(User user);
 
     boolean existsByEmail(String email);
+
+    User update(UUID userId, String name, String timezone);
 }

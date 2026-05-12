@@ -34,4 +34,12 @@ public class UserServiceImpl implements UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    public User update(UUID userId, String name, String timezone) {
+        User user = getById(userId);
+        user.setName(name);
+        user.setTimezone(timezone);
+        return userRepository.save(user);
+    }
 }
