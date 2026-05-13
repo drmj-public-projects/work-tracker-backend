@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface OrganizationSettingsService {
     OrganizationSettings getByOrganizationId(UUID id);
+    OrganizationSettings save(OrganizationSettings settings);
 }

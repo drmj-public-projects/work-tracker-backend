@@ -21,4 +21,9 @@ public class OrganizationSettingsServiceImpl implements OrganizationSettingsServ
                         ErrorMessage.ORGANIZATION_SETTINGS_NOT_FOUND_MESSAGE.getMessage()
                 ));
     }
+
+    @Override
+    public OrganizationSettings save(OrganizationSettings settings) {
+        return organizationSettingsRepository.save(settings);
+    }
 }

@@ -48,7 +48,8 @@ public enum ErrorMessage {
     REGISTRATION_FAILED("Registration failed, please try again"),
     USER_UPDATE_FAILED("Failed to update user profile"),
     USER_ORGANIZATION_LIMIT_REACHED("You have reached the maximum number of organizations (2)"),
-    ORGANIZATION_NAME_REQUIRED("Organization name is required");
+    ORGANIZATION_NAME_REQUIRED("Organization name is required"),
+    USER_NOT_AUTHORIZED_TO_UPDATE_SETTINGS("User does not have permission to update organization settings");
 
     private final String message;
 
