@@ -1,9 +1,14 @@
 package com.drmj.work_tracker.service;
 
 import com.drmj.work_tracker.entity.Organization;
+import com.drmj.work_tracker.entity.User;
+import com.drmj.work_tracker.entity.UserOrganization;
+import com.drmj.work_tracker.entity.enums.UserOrganizationRole;
+import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.OrganizationRepository;
 import com.drmj.work_tracker.utils.ErrorMessage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +18,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
+    private final UserService userService;
+    private final UserOrganizationService userOrganizationService;
+
+    private static final long MAX_ORG_TO_CREATE= 2;
 
     @Override
     public boolean validateIfExists(UUID organizationId) {
@@ -28,5 +37,29 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Organization getReference(UUID id) {
         return organizationRepository.getReferenceById(id);
+    }
+
+    @Override
+    @Transactional
+    public Organization createOrganization(UUID userId, String name) {
+        long orgCount = organizationRepository.countByCreatedBy(userId);
+        if (orgCount >= MAX_ORG_TO_CREATE) {
+            throw new BusinessException(ErrorMessage.USER_ORGANIZATION_LIMIT_REACHED.getMessage());
+        }
+        Organization organization = Organization.builder()
+                .name(name)
+                .build();
+        Organization savedOrg = organizationRepository.save(organization);
+
+        User user = userService.getReference(userId);
+        UserOrganization userOrg = UserOrganization.builder()
+                .user(user)
+                .userId(userId)
+                .organization(savedOrg)
+                .organizationId(savedOrg.getId())
+                .role(UserOrganizationRole.ADMIN)
+                .build();
+        userOrganizationService.save(userOrg);
+        return savedOrg;
     }
 }

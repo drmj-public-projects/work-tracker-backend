@@ -10,4 +10,6 @@ public interface OrganizationService {
     Organization getById(UUID organizationId);
 
     Organization getReference(UUID id);
+
+    Organization createOrganization(UUID userId, String name);
 }

@@ -46,7 +46,9 @@ public enum ErrorMessage {
     PASSWORD_TOO_SHORT("Password must be at least 6 characters"),
     USER_NOT_ALLOWED("The user does not have permission to register new users"),
     REGISTRATION_FAILED("Registration failed, please try again"),
-    USER_UPDATE_FAILED("Failed to update user profile");
+    USER_UPDATE_FAILED("Failed to update user profile"),
+    USER_ORGANIZATION_LIMIT_REACHED("You have reached the maximum number of organizations (2)"),
+    ORGANIZATION_NAME_REQUIRED("Organization name is required");
 
     private final String message;
 
