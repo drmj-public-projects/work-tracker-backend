@@ -6,20 +6,13 @@ import com.drmj.work_tracker.dto.request.organization.CreateOrganizationSettings
 import com.drmj.work_tracker.dto.request.organization.SaveOrganizationSettingsRequest;
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.dto.response.invitationCode.InvitationCodeResponse;
+import com.drmj.work_tracker.dto.response.organization.OrganizationDetailResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationSettingsResponse;
-import com.drmj.work_tracker.usecase.organization.CreateOrganizationSettingsUseCase;
-import com.drmj.work_tracker.usecase.organization.CreateOrganizationUseCase;
-import com.drmj.work_tracker.usecase.organization.GenerateInvitationCodeUseCase;
-import com.drmj.work_tracker.usecase.organization.SaveOrganizationSettingsUseCase;
+import com.drmj.work_tracker.usecase.organization.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -31,6 +24,7 @@ public class OrganizationController {
     private final CreateOrganizationUseCase createOrganizationUseCase;
     private final SaveOrganizationSettingsUseCase saveOrganizationSettingsUseCase;
     private final CreateOrganizationSettingsUseCase createOrganizationSettingsUseCase;
+    private final GetOrganizationDetailUseCase getOrganizationDetailUseCase;
 
     @PostMapping("/invite-code")
     public ApiResponse<InvitationCodeResponse> generate(@RequestBody @Valid GenerateInvitationCodeRequest request) {
@@ -53,5 +47,10 @@ public class OrganizationController {
     public ApiResponse<OrganizationSettingsResponse> createSettings(
             @RequestBody @Valid CreateOrganizationSettingsRequest request) {
         return createOrganizationSettingsUseCase.execute(request);
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<OrganizationDetailResponse> getOrganizationDetail(@PathVariable UUID id) {
+        return getOrganizationDetailUseCase.execute(id);
     }
 }
