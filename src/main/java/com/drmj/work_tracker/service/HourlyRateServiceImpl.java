@@ -7,6 +7,8 @@ import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,5 +20,10 @@ public class HourlyRateServiceImpl implements HourlyRateService {
     public HourlyRate getById(UUID id) {
         return hourlyRateRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.HOURLY_RATE_NOT_FOUND_MESSAGE.getMessage()));
+    }
+
+    @Override
+    public List<HourlyRate> getActiveRatesByPlaceIds(UUID userId, UUID organizationId, List<UUID> placeIds, OffsetDateTime time) {
+        return hourlyRateRepository.findActiveRatesByPlaceIds(userId, organizationId, placeIds, time);
     }
 }

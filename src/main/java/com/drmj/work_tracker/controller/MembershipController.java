@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/membership")
+@RequestMapping("/api/membership")
 @RequiredArgsConstructor
 public class MembershipController {
     private final JoinOrganizationUseCase joinOrganizationUseCase;

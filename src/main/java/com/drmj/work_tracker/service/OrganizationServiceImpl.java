@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -61,5 +62,10 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .build();
         userOrganizationService.save(userOrg);
         return savedOrg;
+    }
+
+    @Override
+    public List<Organization> getAllByIds(List<UUID> ids) {
+        return organizationRepository.findAllById(ids);
     }
 }

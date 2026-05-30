@@ -3,6 +3,7 @@ package com.drmj.work_tracker.service;
 import com.drmj.work_tracker.dto.response.auth.LoginResponse;
 import com.drmj.work_tracker.dto.response.auth.TokenResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationResponse;
+import com.drmj.work_tracker.dto.response.user.UserResponse;
 import com.drmj.work_tracker.entity.User;
 import com.drmj.work_tracker.entity.UserOrganization;
 import com.drmj.work_tracker.exception.BusinessException;
@@ -38,9 +39,7 @@ public class AuthServiceImpl implements AuthService {
                 .toList();
         return new LoginResponse(
                 baseToken,
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
+                UserResponse.fromEntity(user),
                 organizationList
         );
     }

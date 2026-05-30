@@ -2,19 +2,21 @@ package com.drmj.work_tracker.controller;
 
 import com.drmj.work_tracker.dto.request.place.CreatePlaceRequest;
 import com.drmj.work_tracker.dto.response.ApiResponse;
+import com.drmj.work_tracker.dto.response.place.PlaceDetailResponse;
 import com.drmj.work_tracker.dto.response.place.PlaceResponse;
 import com.drmj.work_tracker.usecase.place.CreatePlaceUseCase;
 import com.drmj.work_tracker.usecase.place.GetPlaceByIdUseCase;
 import com.drmj.work_tracker.usecase.place.GetPlacesByOrganizationIdUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/places")
+@RequestMapping("/api/places")
 @RequiredArgsConstructor
 public class PlaceController {
     private final GetPlaceByIdUseCase getPlaceByIdUseCase;
@@ -27,8 +29,11 @@ public class PlaceController {
     }
 
     @GetMapping("/getByOrganizationId/{organizationId}")
-    public ApiResponse<List<PlaceResponse>> getByOrganizationId(@PathVariable("organizationId") UUID organizationId) {
-        return getPlacesByOrganizationIdUseCase.execute(organizationId);
+    public ApiResponse<List<PlaceDetailResponse>> getByOrganizationId(
+            @PathVariable("organizationId") UUID organizationId,
+            Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return getPlacesByOrganizationIdUseCase.execute(organizationId, userId);
     }
 
     @PostMapping

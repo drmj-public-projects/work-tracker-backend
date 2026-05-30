@@ -12,6 +12,7 @@ public class OrganizationDetailResponse {
     private UUID id;
     private String name;
     private OrganizationSettingsResponse settings;
+    private Long memberCount;
 
     public static OrganizationDetailResponse buildFromOrganizationAndSettings(
             com.drmj.work_tracker.entity.Organization organization,

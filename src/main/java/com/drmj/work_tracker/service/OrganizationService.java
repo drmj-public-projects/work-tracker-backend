@@ -2,6 +2,7 @@ package com.drmj.work_tracker.service;
 
 import com.drmj.work_tracker.entity.Organization;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationService {
@@ -12,4 +13,6 @@ public interface OrganizationService {
     Organization getReference(UUID id);
 
     Organization createOrganization(UUID userId, String name);
+
+    List<Organization> getAllByIds(List<UUID> ids);
 }

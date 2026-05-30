@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/workSessions")
+@RequestMapping("/api/workSessions")
 @RequiredArgsConstructor
 public class WorkSessionController {
     private final StartWorkSessionUseCase startWorkSessionUseCase;

@@ -3,6 +3,7 @@ package com.drmj.work_tracker.service;
 import com.drmj.work_tracker.entity.UserOrganization;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface UserOrganizationService {
@@ -13,4 +14,6 @@ public interface UserOrganizationService {
     List<UserOrganization> findByUserId(UUID userId);
 
     UserOrganization save(UserOrganization userOrganization);
+
+    Map<UUID, Long> countMembersByOrganizationIds(List<UUID> organizationIds);
 }

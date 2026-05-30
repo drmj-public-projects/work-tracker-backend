@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,4 +23,16 @@ public interface HourlyRateRepository extends JpaRepository<HourlyRate, UUID> {
       AND hr.isDeleted = false
     """)
     Optional<HourlyRate> findActiveRate(UUID userId, UUID organizationId, UUID placeId, OffsetDateTime time);
+
+    @Query("""
+    SELECT hr
+    FROM HourlyRate hr
+    WHERE hr.userId = :userId
+      AND hr.organizationId = :organizationId
+      AND hr.placeId IN :placeIds
+      AND hr.validFrom <= :time
+      AND (hr.validTo IS NULL OR hr.validTo >= :time)
+      AND hr.isDeleted = false
+    """)
+    List<HourlyRate> findActiveRatesByPlaceIds(UUID userId, UUID organizationId, List<UUID> placeIds, OffsetDateTime time);
 }

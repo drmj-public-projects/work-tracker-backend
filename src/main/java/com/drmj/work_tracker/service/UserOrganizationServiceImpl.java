@@ -7,7 +7,9 @@ import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -34,5 +36,18 @@ public class UserOrganizationServiceImpl implements UserOrganizationService {
     @Override
     public UserOrganization save(UserOrganization userOrganization) {
         return userOrganizationRepository.save(userOrganization);
+    }
+
+    @Override
+    public Map<UUID, Long> countMembersByOrganizationIds(List<UUID> organizationIds) {
+        if (organizationIds == null || organizationIds.isEmpty()) {
+            return new HashMap<>();
+        }
+        List<Object[]> results = userOrganizationRepository.countMembersByOrganizationIds(organizationIds);
+        Map<UUID, Long> counts = new HashMap<>();
+        for (Object[] row : results) {
+            counts.put((UUID) row[0], (Long) row[1]);
+        }
+        return counts;
     }
 }
