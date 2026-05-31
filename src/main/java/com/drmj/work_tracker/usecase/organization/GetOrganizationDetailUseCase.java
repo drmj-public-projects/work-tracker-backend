@@ -12,6 +12,8 @@ import com.drmj.work_tracker.service.UserOrganizationService;
 import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -32,7 +34,11 @@ public class GetOrganizationDetailUseCase {
         } catch (Exception e) {
             settings = null;
         }
-        return new ApiResponse<>(OrganizationDetailResponse.buildFromOrganizationAndSettings(organization, settings));
+
+        Map<UUID, Long> memberCounts = userOrganizationService.countMembersByOrganizationIds(List.of(organizationId));
+        Long memberCount = memberCounts.getOrDefault(organizationId, 0L);
+
+        return new ApiResponse<>(OrganizationDetailResponse.buildFromOrganizationAndSettings(organization, settings, memberCount));
     }
 
     private void validateUserAccess(UUID userId, UUID organizationId) {

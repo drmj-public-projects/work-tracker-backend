@@ -1,5 +1,7 @@
 package com.drmj.work_tracker.dto.response.organization;
 
+import com.drmj.work_tracker.entity.Organization;
+import com.drmj.work_tracker.entity.OrganizationSettings;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +17,15 @@ public class OrganizationDetailResponse {
     private Long memberCount;
 
     public static OrganizationDetailResponse buildFromOrganizationAndSettings(
-            com.drmj.work_tracker.entity.Organization organization,
-            com.drmj.work_tracker.entity.OrganizationSettings settings) {
+            Organization organization,
+            OrganizationSettings settings,
+            Long memberCount) {
 
         return OrganizationDetailResponse.builder()
                 .id(organization.getId())
                 .name(organization.getName())
                 .settings(settings != null ? OrganizationSettingsResponse.fromEntity(settings) : null)
+                .memberCount(memberCount)
                 .build();
     }
 }
