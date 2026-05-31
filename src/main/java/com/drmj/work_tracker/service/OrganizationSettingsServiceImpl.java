@@ -26,4 +26,9 @@ public class OrganizationSettingsServiceImpl implements OrganizationSettingsServ
     public OrganizationSettings save(OrganizationSettings settings) {
         return organizationSettingsRepository.save(settings);
     }
+
+    @Override
+    public java.util.Optional<OrganizationSettings> findByOrganizationId(UUID organizationId) {
+        return organizationSettingsRepository.getByOrganizationId(organizationId);
+    }
 }

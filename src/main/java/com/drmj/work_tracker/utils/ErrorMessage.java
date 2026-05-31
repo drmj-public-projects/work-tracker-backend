@@ -49,7 +49,9 @@ public enum ErrorMessage {
     USER_UPDATE_FAILED("Failed to update user profile"),
     USER_ORGANIZATION_LIMIT_REACHED("You have reached the maximum number of organizations (2)"),
     ORGANIZATION_NAME_REQUIRED("Organization name is required"),
-    USER_NOT_AUTHORIZED_TO_UPDATE_SETTINGS("User does not have permission to update organization settings");
+    USER_NOT_AUTHORIZED_TO_UPDATE_SETTINGS("User does not have permission to update organization settings"),
+    PLACE_ID_OR_ORGANIZATION_ID_REQUIRED("Either placeId or organizationId is required"),
+    ONLY_ONE_OF_PLACE_OR_ORGANIZATION_ALLOWED("Only one of placeId or organizationId should be provided");
 
     private final String message;
 

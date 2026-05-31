@@ -28,6 +28,7 @@ public class OrganizationController {
     private final CreateOrganizationSettingsUseCase createOrganizationSettingsUseCase;
     private final GetOrganizationDetailUseCase getOrganizationDetailUseCase;
     private final GetOrganizationsByUserUseCase getOrganizationsByUserUseCase;
+    private final GetOrganizationSettingsUseCase getOrganizationSettingsUseCase;
 
     @PostMapping("/invite-code")
     public ApiResponse<InvitationCodeResponse> generate(@RequestBody @Valid GenerateInvitationCodeRequest request) {
@@ -61,5 +62,10 @@ public class OrganizationController {
     public ApiResponse<List<OrganizationDetailResponse>> getOrganizations(Authentication authentication) {
         UUID userId = UUID.fromString(authentication.getName());
         return getOrganizationsByUserUseCase.execute(userId);
+    }
+
+    @GetMapping("/{id}/settings")
+    public ApiResponse<OrganizationSettingsResponse> getSettings(@PathVariable UUID id) {
+        return getOrganizationSettingsUseCase.execute(id);
     }
 }

@@ -61,4 +61,19 @@ public class SecurityUtils {
                 .map(role -> role.replaceFirst("^ROLE_", ""))
                 .orElseThrow(() -> new IllegalStateException("No role found"));
     }
+
+    public static UUID getCurrentOrganizationId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        Object details = authentication.getDetails();
+        if (details instanceof java.util.Map<?, ?> map) {
+            String organizationId = (String) map.get("organizationId");
+            if (organizationId != null) {
+                return UUID.fromString(organizationId);
+            }
+        }
+        throw new IllegalStateException("No organization context found");
+    }
 }

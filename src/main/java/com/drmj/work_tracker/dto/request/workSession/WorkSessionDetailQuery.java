@@ -14,8 +14,12 @@ import java.util.UUID;
 @Builder
 public class WorkSessionDetailQuery {
     private UUID placeId;
+    private UUID organizationId;
+    private String range;
     private OffsetDateTime startDate;
     private OffsetDateTime endDate;
     private List<WorkSessionStatus> status;
     private UUID userId;
+    private Integer page;
+    private Integer size;
 }

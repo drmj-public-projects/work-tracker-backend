@@ -16,6 +16,7 @@ import java.util.UUID;
 @Builder
 public class WorkSessionPlaceSummaryQuery {
     private UUID placeId;
+    private UUID organizationId;
     private UUID userId;
     private String range;
     private String groupBy;

@@ -16,4 +16,8 @@ public class WorkSessionSummary {
     private Integer totalSessions;
     private Integer totalMinutes;
     private BigDecimal totalPay;
+    private Integer timerMinutes;
+    private BigDecimal timerPay;
+    private Integer manualMinutes;
+    private BigDecimal manualPay;
 }

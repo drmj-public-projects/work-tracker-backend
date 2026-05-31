@@ -17,6 +17,9 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
@@ -200,7 +203,30 @@ public class WorkSessionServiceImpl implements WorkSessionService {
     }
 
     @Override
-    public List<WorkSession> findByFilters(UUID placeId, OffsetDateTime start, OffsetDateTime end, List<WorkSessionStatus> status, UUID userId) {
-        return workSessionRepository.findByFilters(placeId, start, end, status, userId);
+    public List<WorkSession> findByFilters(UUID placeId, UUID organizationId, OffsetDateTime start, OffsetDateTime end, List<WorkSessionStatus> status, UUID userId) {
+        return workSessionRepository.findByFilters(placeId, organizationId, start, end, status, userId);
+    }
+
+    @Override
+    public Page<WorkSession> findByFiltersPaginated(UUID placeId, UUID organizationId, OffsetDateTime start, OffsetDateTime end, List<WorkSessionStatus> status, UUID userId, Pageable pageable) {
+        return workSessionRepository.findByFiltersPaginated(placeId, organizationId, start, end, status, userId, pageable);
+    }
+
+    @Override
+    public java.util.Optional<WorkSession> findActiveSessionByUserId(UUID userId) {
+        return workSessionRepository.findFirstByUserIdAndStatus(userId, WorkSessionStatus.ACTIVE);
+    }
+
+    @Override
+    public WorkSession updateActiveSession(WorkSession session, String notes, Integer breakMinutes) {
+        if (notes != null) {
+            session.setNotes(notes);
+        }
+        if (breakMinutes != null) {
+            session.setBreakMinutes(breakMinutes);
+        }
+        session.setIsEdited(true);
+        session.setEditedAt(OffsetDateTime.now(java.time.ZoneOffset.UTC));
+        return workSessionRepository.save(session);
     }
 }
