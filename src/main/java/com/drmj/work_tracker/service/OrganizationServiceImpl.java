@@ -1,6 +1,7 @@
 package com.drmj.work_tracker.service;
 
 import com.drmj.work_tracker.entity.Organization;
+import com.drmj.work_tracker.entity.OrganizationSettings;
 import com.drmj.work_tracker.entity.User;
 import com.drmj.work_tracker.entity.UserOrganization;
 import com.drmj.work_tracker.entity.enums.UserOrganizationRole;
@@ -21,6 +22,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
     private final UserOrganizationService userOrganizationService;
+    private final OrganizationSettingsService organizationSettingsService;
 
     private static final long MAX_ORG_TO_CREATE= 1;
 
@@ -61,6 +63,13 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .role(UserOrganizationRole.ADMIN)
                 .build();
         userOrganizationService.save(userOrg);
+        OrganizationSettings orgSettings = OrganizationSettings.builder()
+                .organizationId(savedOrg.getId())
+                .allowManualEntries(false)
+                .allowEditAfterSubmit(false)
+                .requireLocation(false)
+                .build();
+        organizationSettingsService.save(orgSettings);
         return savedOrg;
     }
 

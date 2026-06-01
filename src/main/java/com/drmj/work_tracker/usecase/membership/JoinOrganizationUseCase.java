@@ -7,6 +7,7 @@ import com.drmj.work_tracker.entity.InvitationCode;
 import com.drmj.work_tracker.entity.Organization;
 import com.drmj.work_tracker.entity.User;
 import com.drmj.work_tracker.entity.UserOrganization;
+import com.drmj.work_tracker.entity.enums.UserOrganizationRole;
 import com.drmj.work_tracker.exception.BusinessException;
 import com.drmj.work_tracker.security.SecurityUtils;
 import com.drmj.work_tracker.service.InvitationCodeService;
@@ -35,6 +36,7 @@ public class JoinOrganizationUseCase {
         InvitationCode invitationCode = invitationCodeService.findByCode(normalizedCode);
 
         validateInvitationCode(invitationCode);
+        updateRoles(invitationCode);
         validateUserNotAlreadyMember(currentUserId, invitationCode.getOrganizationId());
 
         UserOrganization membership = createMembership(currentUserId, invitationCode);
@@ -81,5 +83,17 @@ public class JoinOrganizationUseCase {
             invitationCode.setIsActive(false);
         }
         invitationCodeService.save(invitationCode);
+    }
+
+    private void updateRoles(InvitationCode invitationCode) {
+        if (UserOrganizationRole.ADMIN.equals(invitationCode.getRole())) {
+            invitationCode.setRole(UserOrganizationRole.EMPLOYER);
+            return;
+        }
+        if (UserOrganizationRole.EMPLOYER.equals(invitationCode.getRole())) {
+            invitationCode.setRole(UserOrganizationRole.EMPLOYEE);
+            return;
+        }
+        throw new BusinessException(ErrorMessage.ONLY_ADMINS_AND_EMPLOYERS_CAN_JOIN_MEMBERS.getMessage());
     }
 }

@@ -51,6 +51,7 @@ public enum ErrorMessage {
     ORGANIZATION_NAME_REQUIRED("Organization name is required"),
     USER_NOT_AUTHORIZED_TO_UPDATE_SETTINGS("User does not have permission to update organization settings"),
     PLACE_ID_OR_ORGANIZATION_ID_REQUIRED("Either placeId or organizationId is required"),
+    ONLY_ADMINS_AND_EMPLOYERS_CAN_JOIN_MEMBERS("Only admins and employers can join members"),
     ONLY_ONE_OF_PLACE_OR_ORGANIZATION_ALLOWED("Only one of placeId or organizationId should be provided");
 
     private final String message;
