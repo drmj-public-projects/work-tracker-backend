@@ -6,12 +6,14 @@ import com.drmj.work_tracker.dto.request.organization.CreateOrganizationSettings
 import com.drmj.work_tracker.dto.request.organization.SaveOrganizationSettingsRequest;
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.dto.response.invitationCode.InvitationCodeResponse;
+import com.drmj.work_tracker.dto.response.invitationCode.InvitationCodeStatsResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationDetailResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationResponse;
 import com.drmj.work_tracker.dto.response.organization.OrganizationSettingsResponse;
 import com.drmj.work_tracker.usecase.organization.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +31,32 @@ public class OrganizationController {
     private final GetOrganizationDetailUseCase getOrganizationDetailUseCase;
     private final GetOrganizationsByUserUseCase getOrganizationsByUserUseCase;
     private final GetOrganizationSettingsUseCase getOrganizationSettingsUseCase;
+    private final GetInvitationCodesByOrganizationUseCase getInvitationCodesByOrganizationUseCase;
+    private final GetInvitationCodeStatsUseCase getInvitationCodeStatsUseCase;
+    private final RevokeInvitationCodeUseCase revokeInvitationCodeUseCase;
 
     @PostMapping("/invite-code")
     public ApiResponse<InvitationCodeResponse> generate(@RequestBody @Valid GenerateInvitationCodeRequest request) {
         return generateInvitationCodeUseCase.execute(request);
+    }
+
+    @GetMapping("/{id}/invitation-codes")
+    public ApiResponse<Page<InvitationCodeResponse>> getInvitationCodes(
+            @PathVariable UUID id,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return getInvitationCodesByOrganizationUseCase.execute(id, page, size);
+    }
+
+    @GetMapping("/{id}/invitation-codes/stats")
+    public ApiResponse<InvitationCodeStatsResponse> getInvitationCodeStats(@PathVariable UUID id) {
+        return getInvitationCodeStatsUseCase.execute(id);
+    }
+
+    @DeleteMapping("/invitation-codes/{invitationCodeId}")
+    public ApiResponse<InvitationCodeResponse> revokeInvitationCode(@PathVariable UUID invitationCodeId) {
+        return revokeInvitationCodeUseCase.execute(invitationCodeId);
     }
 
     @PostMapping

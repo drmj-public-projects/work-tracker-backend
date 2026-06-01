@@ -5,8 +5,11 @@ import com.drmj.work_tracker.exception.NotFoundException;
 import com.drmj.work_tracker.repository.InvitationCodeRepository;
 import com.drmj.work_tracker.utils.ErrorMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,32 @@ public class InvitationCodeServiceImpl implements InvitationCodeService {
     public InvitationCode findByCode(String code) {
         return invitationCodeRepository.findByCode(code)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.INVALID_INVITATION_CODE.getMessage()));
+    }
+
+    @Override
+    public InvitationCode findById(UUID id) {
+        return invitationCodeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.INVALID_INVITATION_CODE.getMessage()));
+    }
+
+    @Override
+    public Page<InvitationCode> findByOrganizationId(UUID organizationId, Pageable pageable) {
+        return invitationCodeRepository.findByOrganizationId(organizationId, pageable);
+    }
+
+    @Override
+    public Long countActiveByOrganizationId(UUID organizationId) {
+        return invitationCodeRepository.countActiveByOrganizationId(organizationId);
+    }
+
+    @Override
+    public Long sumCurrentUsesByOrganizationId(UUID organizationId) {
+        return invitationCodeRepository.sumCurrentUsesByOrganizationId(organizationId);
+    }
+
+    @Override
+    public Long countExpiredByOrganizationId(UUID organizationId) {
+        return invitationCodeRepository.countExpiredByOrganizationId(organizationId);
     }
 
     private String generateRandomCode() {

@@ -22,7 +22,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final UserService userService;
     private final UserOrganizationService userOrganizationService;
 
-    private static final long MAX_ORG_TO_CREATE= 2;
+    private static final long MAX_ORG_TO_CREATE= 1;
 
     @Override
     public boolean validateIfExists(UUID organizationId) {
