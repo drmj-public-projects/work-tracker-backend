@@ -16,4 +16,6 @@ public interface UserOrganizationService {
     UserOrganization save(UserOrganization userOrganization);
 
     Map<UUID, Long> countMembersByOrganizationIds(List<UUID> organizationIds);
+
+    List<UserOrganization> findByOrganizationId(UUID organizationId);
 }

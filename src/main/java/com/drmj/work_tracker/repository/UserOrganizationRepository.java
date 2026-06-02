@@ -17,6 +17,8 @@ public interface UserOrganizationRepository extends JpaRepository<UserOrganizati
 
     List<UserOrganization> findByUser_id(UUID userId);
 
+    List<UserOrganization> findByOrganizationIdAndIsDeletedFalse(UUID organizationId);
+
     @Query("""
     SELECT uo.organizationId, COUNT(uo)
     FROM UserOrganization uo

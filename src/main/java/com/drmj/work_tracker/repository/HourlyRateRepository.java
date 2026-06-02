@@ -35,4 +35,35 @@ public interface HourlyRateRepository extends JpaRepository<HourlyRate, UUID> {
       AND hr.isDeleted = false
     """)
     List<HourlyRate> findActiveRatesByPlaceIds(UUID userId, UUID organizationId, List<UUID> placeIds, OffsetDateTime time);
+
+    @Query("""
+    SELECT hr
+    FROM HourlyRate hr
+    WHERE hr.organizationId = :organizationId
+      AND hr.placeId = :placeId
+      AND hr.isDeleted = false
+    """)
+    List<HourlyRate> findAllByOrganizationIdAndPlaceId(UUID organizationId, UUID placeId);
+
+    @Query("""
+    SELECT hr
+    FROM HourlyRate hr
+    WHERE hr.userId = :userId
+      AND hr.organizationId = :organizationId
+      AND hr.placeId = :placeId
+      AND hr.isDeleted = false
+    """)
+    List<HourlyRate> findAllByUserIdAndOrganizationIdAndPlaceId(UUID userId, UUID organizationId, UUID placeId);
+
+    @Query("""
+    SELECT hr
+    FROM HourlyRate hr
+    WHERE hr.organizationId = :organizationId
+      AND hr.placeId = :placeId
+      AND hr.isDeleted = false
+      AND hr.validTo IS NOT NULL
+      AND hr.validTo <= :soonDate
+      AND hr.validTo > :now
+    """)
+    List<HourlyRate> findExpiringSoonByPlaceId(UUID organizationId, UUID placeId, OffsetDateTime now, OffsetDateTime soonDate);
 }

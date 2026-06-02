@@ -2,8 +2,7 @@ package com.drmj.work_tracker.entity;
 
 import jakarta.persistence.*;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -23,6 +22,7 @@ import java.time.OffsetDateTime;
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
+@NoArgsConstructor
 public class HourlyRate extends BaseEntity {
     @Id
     @GeneratedValue

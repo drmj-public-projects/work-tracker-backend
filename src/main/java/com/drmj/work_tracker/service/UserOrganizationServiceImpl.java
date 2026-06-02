@@ -50,4 +50,9 @@ public class UserOrganizationServiceImpl implements UserOrganizationService {
         }
         return counts;
     }
+
+    @Override
+    public List<UserOrganization> findByOrganizationId(UUID organizationId) {
+        return userOrganizationRepository.findByOrganizationIdAndIsDeletedFalse(organizationId);
+    }
 }

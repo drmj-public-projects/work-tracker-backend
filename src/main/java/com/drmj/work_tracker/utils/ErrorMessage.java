@@ -52,7 +52,10 @@ public enum ErrorMessage {
     USER_NOT_AUTHORIZED_TO_UPDATE_SETTINGS("User does not have permission to update organization settings"),
     PLACE_ID_OR_ORGANIZATION_ID_REQUIRED("Either placeId or organizationId is required"),
     ONLY_ADMINS_AND_EMPLOYERS_CAN_JOIN_MEMBERS("Only admins and employers can join members"),
-    ONLY_ONE_OF_PLACE_OR_ORGANIZATION_ALLOWED("Only one of placeId or organizationId should be provided");
+     ONLY_ONE_OF_PLACE_OR_ORGANIZATION_ALLOWED("Only one of placeId or organizationId should be provided"),
+     HOURLY_RATE_ALREADY_EXISTS("Hourly rate already exists for this employee at this place with the same validFrom"),
+     HOURLY_RATE_CONFLICT("Employee already has an active hourly rate without expiration"),
+     USER_NOT_AUTHORIZED_TO_MANAGE_HOURLY_RATES("User does not have permission to manage hourly rates");
 
     private final String message;
 
