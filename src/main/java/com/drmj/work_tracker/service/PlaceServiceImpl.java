@@ -35,4 +35,9 @@ public class PlaceServiceImpl implements PlaceService {
     public boolean existsByNameAndOrganizationId(String name, UUID organizationId) {
         return placeRepository.existsByNameIgnoreCaseAndOrganizationId(name, organizationId);
     }
+
+    @Override
+    public boolean existsByNameAndOrganizationIdExcludingId(String name, UUID organizationId, UUID id) {
+        return placeRepository.existsByNameIgnoreCaseAndOrganizationIdAndIdNot(name, organizationId, id);
+    }
 }

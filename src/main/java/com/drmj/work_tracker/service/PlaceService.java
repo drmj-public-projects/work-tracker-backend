@@ -13,4 +13,6 @@ public interface PlaceService {
     Place save(Place place);
 
     boolean existsByNameAndOrganizationId(String name, UUID organizationId);
+
+    boolean existsByNameAndOrganizationIdExcludingId(String name, UUID organizationId, UUID id);
 }

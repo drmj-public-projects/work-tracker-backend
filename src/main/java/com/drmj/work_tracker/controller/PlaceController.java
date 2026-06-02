@@ -1,12 +1,14 @@
 package com.drmj.work_tracker.controller;
 
 import com.drmj.work_tracker.dto.request.place.CreatePlaceRequest;
+import com.drmj.work_tracker.dto.request.place.UpdatePlaceRequest;
 import com.drmj.work_tracker.dto.response.ApiResponse;
 import com.drmj.work_tracker.dto.response.place.PlaceDetailResponse;
 import com.drmj.work_tracker.dto.response.place.PlaceResponse;
 import com.drmj.work_tracker.usecase.place.CreatePlaceUseCase;
 import com.drmj.work_tracker.usecase.place.GetPlaceByIdUseCase;
 import com.drmj.work_tracker.usecase.place.GetPlacesByOrganizationIdUseCase;
+import com.drmj.work_tracker.usecase.place.UpdatePlaceUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class PlaceController {
     private final GetPlaceByIdUseCase getPlaceByIdUseCase;
     private final CreatePlaceUseCase createPlaceUseCase;
+    private final UpdatePlaceUseCase updatePlaceUseCase;
     private final GetPlacesByOrganizationIdUseCase getPlacesByOrganizationIdUseCase;
 
     @GetMapping("/{id}")
@@ -39,5 +42,12 @@ public class PlaceController {
     @PostMapping
     public ApiResponse<PlaceResponse> create(@RequestBody @Valid CreatePlaceRequest request) {
         return createPlaceUseCase.execute(request);
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<PlaceResponse> update(
+            @PathVariable("id") UUID id,
+            @RequestBody @Valid UpdatePlaceRequest request) {
+        return updatePlaceUseCase.execute(id, request);
     }
 }

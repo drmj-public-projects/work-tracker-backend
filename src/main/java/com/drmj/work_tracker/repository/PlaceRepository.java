@@ -12,4 +12,6 @@ public interface PlaceRepository extends JpaRepository<Place, UUID> {
     List<Place> findByOrganization_id(UUID organizationId);
 
     boolean existsByNameIgnoreCaseAndOrganizationId(String name, UUID organizationId);
+
+    boolean existsByNameIgnoreCaseAndOrganizationIdAndIdNot(String name, UUID organizationId, UUID id);
 }
