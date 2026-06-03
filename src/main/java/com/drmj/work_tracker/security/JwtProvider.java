@@ -29,11 +29,17 @@ public class JwtProvider {
     private RSAPrivateKey privateKey;
     private RSAPublicKey publicKey;
 
-    @Value("${jwt.private-key-location}")
+    @Value("${jwt.private-key-location:}")
     private String privateKeyLocation;
 
-    @Value("${jwt.public-key-location}")
+    @Value("${jwt.public-key-location:}")
     private String publicKeyLocation;
+
+    @Value("${jwt.private-key-base64:}")
+    private String privateKeyBase64;
+
+    @Value("${jwt.public-key-base64:}")
+    private String publicKeyBase64;
 
     @Value("${jwt.expiration-seconds}")
     private long expiration;
@@ -42,18 +48,71 @@ public class JwtProvider {
     public void init() throws Exception {
         KeyFactory kf = KeyFactory.getInstance("RSA");
 
-        try (InputStream is = resourceLoader.getResource(privateKeyLocation).getInputStream()) {
+        // Validate that at least one key source is configured
+        boolean hasPrivateKeySource = isNotBlank(privateKeyBase64) || isNotBlank(privateKeyLocation);
+        boolean hasPublicKeySource = isNotBlank(publicKeyBase64) || isNotBlank(publicKeyLocation);
+
+        if (!hasPrivateKeySource) {
+            throw new IllegalStateException(
+                "JWT private key not configured. Set either JWT_PRIVATE_KEY_BASE64 (env var) or jwt.private-key-location property.");
+        }
+        if (!hasPublicKeySource) {
+            throw new IllegalStateException(
+                "JWT public key not configured. Set either JWT_PUBLIC_KEY_BASE64 (env var) or jwt.public-key-location property.");
+        }
+
+        if (isNotBlank(privateKeyBase64)) {
+            this.privateKey = loadPrivateKeyFromBase64(privateKeyBase64, kf);
+        } else {
+            this.privateKey = loadPrivateKeyFromFile(privateKeyLocation, kf);
+        }
+
+        if (isNotBlank(publicKeyBase64)) {
+            this.publicKey = loadPublicKeyFromBase64(publicKeyBase64, kf);
+        } else {
+            this.publicKey = loadPublicKeyFromFile(publicKeyLocation, kf);
+        }
+    }
+
+    private boolean isNotBlank(String value) {
+        return value != null && !value.isBlank();
+    }
+
+    private RSAPrivateKey loadPrivateKeyFromBase64(String base64, KeyFactory kf) throws Exception {
+        // Step 1: Decode the outer Base64 to recover the PEM text
+        String pem = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
+        // Step 2: Strip PEM headers and whitespace (same as file mode)
+        String key = pem.replaceAll("-----\\w+ PRIVATE KEY-----", "").replaceAll("\\s", "");
+        // Step 3: Decode the inner Base64 (the actual key bytes)
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
+        return (RSAPrivateKey) kf.generatePrivate(keySpec);
+    }
+
+    private RSAPrivateKey loadPrivateKeyFromFile(String location, KeyFactory kf) throws Exception {
+        try (InputStream is = resourceLoader.getResource(location).getInputStream()) {
             String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ PRIVATE KEY-----", "").replaceAll("\\s", "");
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
-            privateKey = (RSAPrivateKey) kf.generatePrivate(keySpec);
+            return (RSAPrivateKey) kf.generatePrivate(keySpec);
         }
+    }
 
-        try (InputStream is = resourceLoader.getResource(publicKeyLocation).getInputStream()) {
+    private RSAPublicKey loadPublicKeyFromBase64(String base64, KeyFactory kf) throws Exception {
+        // Step 1: Decode the outer Base64 to recover the PEM text
+        String pem = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
+        // Step 2: Strip PEM headers and whitespace (same as file mode)
+        String key = pem.replaceAll("-----\\w+ PUBLIC KEY-----", "").replaceAll("\\s", "");
+        // Step 3: Decode the inner Base64 (the actual key bytes)
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(key));
+        return (RSAPublicKey) kf.generatePublic(keySpec);
+    }
+
+    private RSAPublicKey loadPublicKeyFromFile(String location, KeyFactory kf) throws Exception {
+        try (InputStream is = resourceLoader.getResource(location).getInputStream()) {
             String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
                     .replaceAll("-----\\w+ PUBLIC KEY-----", "").replaceAll("\\s", "");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(key));
-            publicKey = (RSAPublicKey) kf.generatePublic(keySpec);
+            return (RSAPublicKey) kf.generatePublic(keySpec);
         }
     }
 

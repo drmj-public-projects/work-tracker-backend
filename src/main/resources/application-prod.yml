@@ -1,0 +1,38 @@
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+jwt:
+  # In production, keys are loaded from Base64 env vars (JWT_PRIVATE_KEY_BASE64 / JWT_PUBLIC_KEY_BASE64)
+  # File paths are NOT used in production
+  expiration-seconds: 3600
+
+cors:
+  # Must be set in production via CORS_ALLOWED_ORIGINS env var
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: WARN
+    com.drmj.work_tracker: INFO
+    org.springframework.security: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
