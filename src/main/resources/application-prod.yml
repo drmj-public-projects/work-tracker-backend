@@ -16,8 +16,10 @@ spring:
     baseline-on-migrate: true
 
 jwt:
-  # In production, keys are loaded from Base64 env vars (JWT_PRIVATE_KEY_BASE64 / JWT_PUBLIC_KEY_BASE64)
-  # File paths are NOT used in production
+  private-key-location: file:${JWT_PRIVATE_KEY:}
+  public-key-location: file:${JWT_PUBLIC_KEY:}
+  private-key-base64: ${JWT_PRIVATE_KEY_BASE64:}
+  public-key-base64: ${JWT_PUBLIC_KEY_BASE64:}
   expiration-seconds: 3600
 
 cors:
