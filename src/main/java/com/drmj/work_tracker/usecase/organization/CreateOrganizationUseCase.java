@@ -19,7 +19,8 @@ public class CreateOrganizationUseCase {
         UUID currentUserId = SecurityUtils.getCurrentUserId();
         Organization organization = organizationService.createOrganization(
                 currentUserId,
-                request.getName()
+                request.getName(),
+                request.getTimeZone()
         );
         return new ApiResponse<>(OrganizationResponse.buildFromOrganization(organization));
     }

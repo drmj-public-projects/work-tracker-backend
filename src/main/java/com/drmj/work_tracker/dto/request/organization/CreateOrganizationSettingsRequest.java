@@ -20,4 +20,6 @@ public class CreateOrganizationSettingsRequest {
 
     @NotNull
     private Boolean allowEditAfterSubmit;
+
+    private String timeZone;
 }

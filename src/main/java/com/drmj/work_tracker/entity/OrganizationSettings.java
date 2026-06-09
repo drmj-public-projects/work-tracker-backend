@@ -38,4 +38,7 @@ public class OrganizationSettings extends BaseEntity {
 
     @Column(name = "allow_edit_after_submit", nullable = false)
     private Boolean allowEditAfterSubmit = true;
+
+    @Column(name = "time_zone", nullable = false, length = 50)
+    private String timeZone = "UTC";
 }

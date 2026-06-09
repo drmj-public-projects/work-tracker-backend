@@ -9,4 +9,6 @@ import lombok.Setter;
 public class CreateOrganizationRequest {
     @NotBlank(message = "Organization name is required")
     private String name;
+
+    private String timeZone;
 }

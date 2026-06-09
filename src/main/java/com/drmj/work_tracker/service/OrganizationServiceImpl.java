@@ -44,7 +44,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
-    public Organization createOrganization(UUID userId, String name) {
+    public Organization createOrganization(UUID userId, String name, String timeZone) {
         long orgCount = organizationRepository.countByCreatedBy(userId);
         if (orgCount >= MAX_ORG_TO_CREATE) {
             throw new BusinessException(ErrorMessage.USER_ORGANIZATION_LIMIT_REACHED.getMessage());
@@ -68,6 +68,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .allowManualEntries(false)
                 .allowEditAfterSubmit(false)
                 .requireLocation(false)
+                .timeZone(timeZone != null && !timeZone.isBlank() ? timeZone : "UTC")
                 .build();
         organizationSettingsService.save(orgSettings);
         return savedOrg;

@@ -12,7 +12,7 @@ public interface OrganizationService {
 
     Organization getReference(UUID id);
 
-    Organization createOrganization(UUID userId, String name);
+    Organization createOrganization(UUID userId, String name, String timeZone);
 
     List<Organization> getAllByIds(List<UUID> ids);
 }

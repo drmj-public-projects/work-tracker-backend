@@ -15,4 +15,6 @@ public class SaveOrganizationSettingsRequest {
 
     @NotNull
     private Boolean allowEditAfterSubmit;
+
+    private String timeZone;
 }

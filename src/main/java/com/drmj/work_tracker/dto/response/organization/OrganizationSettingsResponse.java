@@ -16,6 +16,7 @@ public class OrganizationSettingsResponse {
     private Boolean requireLocation;
     private Boolean allowManualEntries;
     private Boolean allowEditAfterSubmit;
+    private String timeZone;
 
     public static OrganizationSettingsResponse fromEntity(OrganizationSettings settings) {
         return OrganizationSettingsResponse.builder()
@@ -24,6 +25,7 @@ public class OrganizationSettingsResponse {
                 .requireLocation(settings.getRequireLocation())
                 .allowManualEntries(settings.getAllowManualEntries())
                 .allowEditAfterSubmit(settings.getAllowEditAfterSubmit())
+                .timeZone(settings.getTimeZone())
                 .build();
     }
 }

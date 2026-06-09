@@ -39,6 +39,9 @@ public class SaveOrganizationSettingsUseCase {
         settings.setRequireLocation(request.getRequireLocation());
         settings.setAllowManualEntries(request.getAllowManualEntries());
         settings.setAllowEditAfterSubmit(request.getAllowEditAfterSubmit());
+        if (request.getTimeZone() != null && !request.getTimeZone().isBlank()) {
+            settings.setTimeZone(request.getTimeZone());
+        }
 
         OrganizationSettings saved = organizationSettingsService.save(settings);
 

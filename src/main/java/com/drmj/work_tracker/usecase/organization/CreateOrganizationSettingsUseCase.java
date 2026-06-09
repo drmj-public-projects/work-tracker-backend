@@ -42,6 +42,7 @@ public class CreateOrganizationSettingsUseCase {
                 .requireLocation(request.getRequireLocation())
                 .allowManualEntries(request.getAllowManualEntries())
                 .allowEditAfterSubmit(request.getAllowEditAfterSubmit())
+                .timeZone(request.getTimeZone() != null && !request.getTimeZone().isBlank() ? request.getTimeZone() : "UTC")
                 .build();
 
         OrganizationSettings saved = organizationSettingsService.save(settings);
