@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApiResponse<T> {
     private int status;
+    private String errorCode;
     private String message;
     private T data;
 
@@ -20,4 +21,5 @@ public class ApiResponse<T> {
         this.message = ApiResponseConstants.SUCCESS_MESSAGE;
         this.data = data;
     }
+
 }

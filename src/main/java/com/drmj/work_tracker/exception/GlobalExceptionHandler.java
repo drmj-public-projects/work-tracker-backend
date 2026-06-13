@@ -13,8 +13,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiResponse<String>> handleNotFoundException(NotFoundException ex) {
+        String errorCode = resolveErrorCode(ex.getErrorCode(), ex.getMessage());
         ApiResponse<String> response = new ApiResponse<>(
                 ApiResponseConstants.NOT_FOUND_CODE,
+                errorCode,
                 ex.getMessage(),
                 null
         );
@@ -23,9 +25,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Object>> handleBusinessException(BusinessException ex) {
+        String errorCode = resolveErrorCode(ex.getErrorCode(), ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(new ApiResponse<>(
                         ApiResponseConstants.FAIL_CODE,
+                        errorCode,
                         ex.getMessage(),
                         null
                 ));
@@ -36,8 +40,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(new ApiResponse<>(
                         ApiResponseConstants.ERROR_CODE,
+                        ErrorMessage.INTERNAL_SERVER_ERROR_MESSAGE.getErrorCode(),
                         ErrorMessage.INTERNAL_SERVER_ERROR_MESSAGE.getMessage(),
                         null
                 ));
+    }
+
+    private String resolveErrorCode(String errorCode, String message) {
+        if (errorCode != null) {
+            return errorCode;
+        }
+        for (ErrorMessage em : ErrorMessage.values()) {
+            if (em.getMessage().equals(message)) {
+                return em.getErrorCode();
+            }
+        }
+        return "GENERIC";
     }
 }

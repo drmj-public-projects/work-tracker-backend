@@ -48,11 +48,15 @@ Controllers → UseCases → Services → Repositories
 ## Error Handling
 
 * All messages in `ErrorMessage.java` (enum)
-* Use:
+* Use the new constructor that accepts `ErrorMessage` directly:
 
 ```java
-throw new BusinessException(ErrorMessage.CONSTANT.getMessage());
+throw new BusinessException(ErrorMessage.CONSTANT);
+throw new NotFoundException(ErrorMessage.CONSTANT);
 ```
+
+* This automatically attaches the `errorCode` (derived from the enum name, e.g. `PLACE_NOT_FOUND`) to the response.
+* If you must throw with a raw String, the `GlobalExceptionHandler` will attempt to resolve the `errorCode` by matching the message against the enum. Fallback is `GENERIC`.
 
 ---
 
@@ -104,6 +108,12 @@ UUID userId = UUID.fromString(authentication.getName());
 ```java
 ApiResponse<T>
 ```
+
+* Fields:
+  - `status` (int): HTTP-like status code
+  - `errorCode` (String): Machine-readable error code (e.g. `PLACE_NOT_FOUND`, `SESSION_OVERLAP`). Null on success.
+  - `message` (String): Human-readable message in English
+  - `data` (T): Payload on success, null on error
 
 ---
 
